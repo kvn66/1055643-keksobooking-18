@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вадим Калашников](https://up.htmlacademy.ru/javascript/18/user/1055643).
-* Наставник: `Неизвестно`.
+* Наставник: [Павел Фанасков](https://up.htmlacademy.ru/javascript/18/user/615993).
 
 ---
 
