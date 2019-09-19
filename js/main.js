@@ -37,9 +37,9 @@ var getRandomItem = function (array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-var createAuthor = function (num) {
+var createAuthor = function (index) {
   return {
-    avatar: 'img/avatars/user0' + (num + 1).toString() + '.png'
+    avatar: 'img/avatars/user0' + (index + 1) + '.png'
   };
 };
 
@@ -50,11 +50,11 @@ var createLocation = function () {
   };
 };
 
-var createOffer = function (num) {
+var createOffer = function (index) {
   var address = createLocation();
   return {
-    title: 'Объявление ' + (num + 1).toString(),
-    address: address.x.toString() + ', ' + address.y.toString(),
+    title: 'Объявление ' + (index + 1),
+    address: address.x + ', ' + address.y,
     price: getRandomNumber(MIN_PRICE, MAX_PRICE),
     type: getRandomItem(HOTEL_TYPES),
     rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
@@ -62,14 +62,14 @@ var createOffer = function (num) {
     checkin: getRandomItem(TIMES),
     checkout: getRandomItem(TIMES),
     features: getRandomArray(FEATURES),
-    description: 'Описание ' + (num + 1).toString(),
+    description: 'Описание ' + (index + 1),
     photos: getRandomArray(PHOTOS)
   };
 };
 
-var createDataArray = function () {
+var createDataArray = function (count) {
   var dataArray = [];
-  for (var i = 0; i < DATA_ARRAY_COUNT; i++) {
+  for (var i = 0; i < count; i++) {
     var dataElement = {
       author: createAuthor(i),
       offer: createOffer(i),
@@ -86,7 +86,7 @@ var createPin = function (dataElement) {
     .querySelector('.map__pin');
   var pinElement = similarPinTemplate.cloneNode(true);
 
-  pinElement.style = 'left: ' + (dataElement.location.x).toString() + 'px; top: ' + (dataElement.location.y).toString() + 'px;';
+  pinElement.style = 'left: ' + dataElement.location.x + 'px; top: ' + dataElement.location.y + 'px;';
   pinElement.querySelector('img').src = dataElement.author.avatar;
   pinElement.querySelector('img').alt = dataElement.offer.title;
 
@@ -95,7 +95,7 @@ var createPin = function (dataElement) {
 
 var createPins = function (dataArray) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < DATA_ARRAY_COUNT; i++) {
+  for (var i = 0; i < dataArray.length; i++) {
     fragment.appendChild(createPin(dataArray[i]));
   }
   return fragment;
@@ -103,7 +103,7 @@ var createPins = function (dataArray) {
 
 window.insertPins = (function () {
   var mapPins = document.querySelector('.map__pins');
-  mapPins.appendChild(createPins(createDataArray()));
+  mapPins.appendChild(createPins(createDataArray(DATA_ARRAY_COUNT)));
 })();
 
 window.unblockMap = (function () {
