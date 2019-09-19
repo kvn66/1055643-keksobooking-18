@@ -26,7 +26,7 @@ var getRandomNumber = function (min, max) {
 
 var getRandomArray = function (array) {
   var result = [];
-  var max = Math.floor(Math.random() * array.length) + 1;
+  var max = getRandomNumber(1, array.length);
   for (var i = 0; i < max; i++) {
     result.push(array[i]);
   }
