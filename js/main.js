@@ -1,6 +1,5 @@
 'use strict';
 
-var RANDOM_MULTIPLIER = 500;
 var DATA_ARRAY_COUNT = 8;
 var MIN_WIDTH = 0;
 var MAX_WIDTH = 1200;
@@ -35,7 +34,7 @@ var getRandomArray = function (array) {
 };
 
 var getRandomItem = function (array) {
-  return array[(Math.floor(Math.random() * RANDOM_MULTIPLIER)) % array.length];
+  return array[Math.floor(Math.random() * array.length)];
 };
 
 var createAuthor = function (num) {
