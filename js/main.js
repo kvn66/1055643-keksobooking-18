@@ -2,7 +2,8 @@
 
 var RANDOM_MULTIPLIER = 500;
 var DATA_ARRAY_COUNT = 8;
-var BODY_WIDTH = 1200;
+var MIN_WIDTH = 0;
+var MAX_WIDTH = 1200;
 var MIN_HEIGHT = 130;
 var MAX_HEIGHT = 630;
 var MIN_PRICE = 100;
@@ -24,46 +25,46 @@ var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-var getMinMaxWidth = function () {
-  var clientWidth = window.innerWidth;
-  return {
-    min: (clientWidth / 2) - (BODY_WIDTH / 2),
-    max: (clientWidth / 2) + (BODY_WIDTH / 2)
-  };
+var getRandomArray = function (array) {
+  var result = [];
+  var max = Math.floor(Math.random() * array.length) + 1;
+  for (var i = 0; i < max; i++) {
+    result.push(array[i]);
+  }
+  return result;
+};
+
+var getRandomItem = function (array) {
+  return array[(Math.floor(Math.random() * RANDOM_MULTIPLIER)) % array.length];
 };
 
 var createAuthor = function (num) {
   return {
-    avatar: 'img/avatars/user0' + num.toString() + '.png'
+    avatar: 'img/avatars/user0' + (num + 1).toString() + '.png'
   };
 };
 
 var createLocation = function () {
-  var minMaxWidth = getMinMaxWidth();
   return {
-    x: getRandomNumber(minMaxWidth.min, minMaxWidth.max),
+    x: getRandomNumber(MIN_WIDTH, MAX_WIDTH),
     y: getRandomNumber(MIN_HEIGHT, MAX_HEIGHT)
   };
-};
-
-var getRandomIndex = function (array) {
-  return (Math.floor(Math.random() * RANDOM_MULTIPLIER)) % array.length;
 };
 
 var createOffer = function (num) {
   var address = createLocation();
   return {
-    title: 'Заголовок ' + num.toString(),
+    title: 'Объявление ' + (num + 1).toString(),
     address: address.x.toString() + ', ' + address.y.toString(),
     price: getRandomNumber(MIN_PRICE, MAX_PRICE),
-    type: HOTEL_TYPES[getRandomIndex(HOTEL_TYPES)],
+    type: getRandomItem(HOTEL_TYPES),
     rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
     guests: getRandomNumber(MIN_GUESTS, MAX_GUESTS),
-    checkin: TIMES[getRandomIndex(TIMES)],
-    checkout: TIMES[getRandomIndex(TIMES)],
-    features: '',
-    description: 'Описание ' + num.toString(),
-    photos: ''
+    checkin: getRandomItem(TIMES),
+    checkout: getRandomItem(TIMES),
+    features: getRandomArray(FEATURES),
+    description: 'Описание ' + (num + 1).toString(),
+    photos: getRandomArray(PHOTOS)
   };
 };
 
@@ -79,6 +80,32 @@ var createDataArray = function () {
   }
   return dataArray;
 };
+
+var createPin = function (dataElement) {
+  var similarPinTemplate = document.querySelector('#pin')
+    .content
+    .querySelector('.map__pin');
+  var pinElement = similarPinTemplate.cloneNode(true);
+
+  pinElement.style = 'left: ' + (dataElement.location.x).toString() + 'px; top: ' + (dataElement.location.y).toString() + 'px;';
+  pinElement.querySelector('img').src = dataElement.author.avatar;
+  pinElement.querySelector('img').alt = dataElement.offer.title;
+
+  return pinElement;
+};
+
+var createPins = function (dataArray) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < DATA_ARRAY_COUNT; i++) {
+    fragment.appendChild(createPin(dataArray[i]));
+  }
+  return fragment;
+};
+
+window.insertPins = (function () {
+  var mapPins = document.querySelector('.map__pins');
+  mapPins.appendChild(createPins(createDataArray()));
+})();
 
 window.unblockMap = (function () {
   document.querySelector('.map').classList.remove('map--faded');
