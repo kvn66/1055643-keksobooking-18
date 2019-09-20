@@ -13,6 +13,8 @@ var MIN_GUESTS = 1;
 var MAX_GUESTS = 4;
 var HOTEL_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var PHOTO_WIDTH = 45;
+var PHOTO_HEIGHT = 40;
 var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
@@ -129,8 +131,8 @@ var createCardPhotos = function (cardElement, dataElement, width, height) {
     var img = document.createElement('img');
     img.classList.add('popup__photo');
     img.src = dataElement.offer.photos[i];
-    img.width = width || 45;
-    img.height = height || 40;
+    img.width = width;
+    img.height = height;
     img.alt = 'Фотография жилья';
     fragment.appendChild(img);
   }
@@ -160,7 +162,7 @@ var createCard = function (dataArray, index) {
   cardElement.replaceChild(createCardFeatures(dataElement), cardElement.querySelector('.popup__features'));
   cardElement.querySelector('.popup__description').textContent = dataElement.offer.description;
   cardElement.querySelector('.popup__avatar').src = dataElement.author.avatar;
-  createCardPhotos(cardElement, dataElement);
+  createCardPhotos(cardElement, dataElement, PHOTO_WIDTH, PHOTO_HEIGHT);
 
   return cardElement;
 };
@@ -170,12 +172,12 @@ var insertCard = function (dataArray) {
   map.insertBefore(createCard(dataArray, 0), map.querySelector('.map__filters-container'));
 };
 
-window.insertDataToHtml = (function () {
+(function () {
   var dataArray = createDataArray(DATA_ARRAY_COUNT);
   insertPins(dataArray);
   insertCard(dataArray);
 })();
 
-window.unblockMap = (function () {
+(function () {
   document.querySelector('.map').classList.remove('map--faded');
 })();
