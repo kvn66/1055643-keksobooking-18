@@ -1,5 +1,6 @@
 'use strict';
 
+var ENTER_KEYCODE = 13;
 var DATA_ARRAY_COUNT = 8;
 var MIN_WIDTH = 0;
 var MAX_WIDTH = 1200;
@@ -172,12 +173,31 @@ var insertCard = function (dataArray) {
   map.insertBefore(createCard(dataArray, 0), map.querySelector('.map__filters-container'));
 };
 
-(function () {
+var mapPin = document.querySelector('.map__pin--main');
+var address = document.querySelector('#address');
+
+var initPage = function () {
+  address.value = mapPin.style.left + ', ' + mapPin.style.top;
+};
+
+initPage();
+
+var activatePage = function () {
   var dataArray = createDataArray(DATA_ARRAY_COUNT);
   insertPins(dataArray);
   insertCard(dataArray);
-})();
-
-(function () {
   document.querySelector('.map').classList.remove('map--faded');
-})();
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  document.querySelector('.map__filters').classList.remove('ad-form--disabled');
+};
+
+mapPin.addEventListener('mousedown', function () {
+  activatePage();
+});
+
+mapPin.addEventListener('keydown', function (evt) {
+  if (evt.which === ENTER_KEYCODE) {
+    activatePage();
+  }
+});
+
