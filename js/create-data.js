@@ -66,19 +66,17 @@ var createOffer = function (index) {
   };
 };
 
-var createDataArray = function (count) {
-  var dataArray = [];
-  for (var i = 0; i < count; i++) {
-    var dataElement = {
-      author: createAuthor(i),
-      offer: createOffer(i),
-      location: createLocation()
-    };
-    dataArray.push(dataElement);
-  }
-  return dataArray;
-};
-
 (function () {
-  window.data = createDataArray();
+  window.createDataArray = function (count) {
+    var dataArray = [];
+    for (var i = 0; i < count; i++) {
+      var dataElement = {
+        author: createAuthor(i),
+        offer: createOffer(i),
+        location: createLocation()
+      };
+      dataArray.push(dataElement);
+    }
+    return dataArray;
+  };
 })();
