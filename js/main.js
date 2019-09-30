@@ -341,18 +341,6 @@ formCapacity.addEventListener('change', function () {
   checkCapacity();
 });
 
-formCapacity.addEventListener('invalid', function () {
-  if (formTitle.validity.tooShort) {
-    formTitle.setCustomValidity('Заголовок должен состоять минимум из 30-и символов');
-  } else if (formTitle.validity.tooLong) {
-    formTitle.setCustomValidity('Заголовок не должен превышать 100-а символов');
-  } else if (formTitle.validity.valueMissing) {
-    formTitle.setCustomValidity('Обязательное поле');
-  } else {
-    formTitle.setCustomValidity('');
-  }
-});
-
 
 var initPage = function () {
   address.value = calculateAddress(pinStyles, true);
