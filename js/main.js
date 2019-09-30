@@ -191,15 +191,15 @@ var calculateAddress = function (pinStyle, isInit) {
   return x + ', ' + y;
 };
 
-var disableFieldsets = function () {
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].disabled = true;
+var disableElement = function (element) {
+  for (var i = 0; i < element.length; i++) {
+    element[i].disabled = true;
   }
 };
 
-var enableFieldsets = function () {
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].disabled = false;
+var enableElement = function (element) {
+  for (var i = 0; i < element.length; i++) {
+    element[i].disabled = false;
   }
 };
 
@@ -210,7 +210,7 @@ var activatePage = function () {
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.map__filters').classList.remove('ad-form--disabled');
-  enableFieldsets();
+  enableElement(formFieldsets);
   address.value = calculateAddress(pinStyles, false);
 };
 
@@ -281,9 +281,7 @@ var formCapacity = form.querySelector('#capacity');
 var changeCapacity = function () {
   var selectedRoomNumber = getlistSelected(formRoomNumber);
 
-  for (var i = 0; i < formCapacity.options.length; i++) {
-    formCapacity.options[i].disabled = true;
-  }
+  disableElement(formCapacity.options);
 
   switch (selectedRoomNumber) {
     case '3':
@@ -345,7 +343,7 @@ formCapacity.addEventListener('change', function () {
 
 var initPage = function () {
   address.value = calculateAddress(pinStyles, true);
-  disableFieldsets();
+  disableElement(formFieldsets);
   formPrice.min = getMinPrice(formType).toString();
   changeCapacity();
   validateCapacity();
