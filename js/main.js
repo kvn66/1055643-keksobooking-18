@@ -278,17 +278,22 @@ var formRoomNumber = form.querySelector('#room_number');
 var formCapacity = form.querySelector('#capacity');
 
 var changeCapacity = function () {
-  var roomNumber = getlistSelected(formRoomNumber);
+  var selectedRoomNumber = getlistSelected(formRoomNumber);
 
   for (var i = 0; i < formCapacity.options.length; i++) {
     formCapacity.options[i].disabled = true;
   }
 
-  switch (roomNumber) {
+  switch (selectedRoomNumber) {
     case '3':
       formCapacity.options[0].disabled = false;
+      formCapacity.options[1].disabled = false;
+      formCapacity.options[2].disabled = false;
+      break;
     case '2':
       formCapacity.options[1].disabled = false;
+      formCapacity.options[2].disabled = false;
+      break;
     case '1':
       formCapacity.options[2].disabled = false;
       break;
@@ -298,8 +303,42 @@ var changeCapacity = function () {
   }
 };
 
+var checkCapacity = function () {
+  var selectedRoomNumber = getlistSelected(formRoomNumber);
+  var selectedCapacity = getlistSelected(formCapacity);
+
+  formCapacity.setCustomValidity('');
+  switch (selectedRoomNumber) {
+    case '3':
+      if (selectedCapacity === '0') {
+        formCapacity.setCustomValidity('Такое количество комнат предназначено для 1-3 гостей');
+      }
+      break;
+    case '2':
+      if (selectedCapacity === '0' || selectedCapacity === '3') {
+        formCapacity.setCustomValidity('Такое количество комнат предназначено для 1-2 гостей');
+      }
+      break;
+    case '1':
+      if (selectedCapacity !== '1') {
+        formCapacity.setCustomValidity('Такое количество комнат предназначено для 1 гостя');
+      }
+      break;
+    case '100':
+      if (selectedCapacity !== '0') {
+        formCapacity.setCustomValidity('Такое количество комнат не для гостей');
+      }
+      break;
+  }
+};
+
 formRoomNumber.addEventListener('change', function () {
   changeCapacity();
+  checkCapacity();
+});
+
+formCapacity.addEventListener('change', function () {
+  checkCapacity();
 });
 
 formCapacity.addEventListener('invalid', function () {
@@ -320,6 +359,7 @@ var initPage = function () {
   disableFieldsets();
   formPrice.min = getMinPrice(formType).toString();
   changeCapacity();
+  checkCapacity();
 };
 
 initPage();
