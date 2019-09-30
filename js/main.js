@@ -1,5 +1,6 @@
 'use strict';
 
+var RADIX = 10;
 var ENTER_KEYCODE = 13;
 var DATA_ARRAY_COUNT = 8;
 var MIN_WIDTH = 0;
@@ -180,13 +181,13 @@ var form = document.querySelector('.ad-form');
 var formFieldsets = form.querySelectorAll('fieldset');
 
 var calculateAddress = function (pinStyle, isInit) {
-  var shiftX = Math.floor(Number(pinStyle.width.slice(0, -2)) / 2);
-  var shiftY = Number(pinStyle.height.slice(0, -2));
+  var shiftX = Math.floor(parseInt(pinStyle.width, RADIX) / 2);
+  var shiftY = parseInt(pinStyle.height, RADIX);
   if (isInit) {
     shiftY = Math.floor(shiftY / 2);
   }
-  var x = Number(pinStyle.left.slice(0, -2)) + shiftX;
-  var y = Number(pinStyle.top.slice(0, -2)) + shiftY;
+  var x = parseInt(pinStyle.left, RADIX) + shiftX;
+  var y = parseInt(pinStyle.top, RADIX) + shiftY;
   return x + ', ' + y;
 };
 
@@ -303,7 +304,7 @@ var changeCapacity = function () {
   }
 };
 
-var checkCapacity = function () {
+var validateCapacity = function () {
   var selectedRoomNumber = getlistSelected(formRoomNumber);
   var selectedCapacity = getlistSelected(formCapacity);
 
@@ -334,11 +335,11 @@ var checkCapacity = function () {
 
 formRoomNumber.addEventListener('change', function () {
   changeCapacity();
-  checkCapacity();
+  validateCapacity();
 });
 
 formCapacity.addEventListener('change', function () {
-  checkCapacity();
+  validateCapacity();
 });
 
 
@@ -347,7 +348,7 @@ var initPage = function () {
   disableFieldsets();
   formPrice.min = getMinPrice(formType).toString();
   changeCapacity();
-  checkCapacity();
+  validateCapacity();
 };
 
 initPage();
