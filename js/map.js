@@ -1,5 +1,6 @@
 'use strict';
 
+var RADIX = 10;
 var ENTER_KEYCODE = 13;
 var DATA_ARRAY_COUNT = 8;
 
