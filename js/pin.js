@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var RADIX = 10;
-
   var mapPin = document.querySelector('.map__pin--main');
 
   var createPin = function (dataElement) {
@@ -18,18 +16,6 @@
     return pinElement;
   };
 
-  var calculateAddress = function (isInit) {
-    var pinStyle = getComputedStyle(mapPin);
-    var shiftX = Math.floor(parseInt(pinStyle.width, RADIX) / 2);
-    var shiftY = parseInt(pinStyle.height, RADIX);
-    if (isInit) {
-      shiftY = Math.floor(shiftY / 2);
-    }
-    var x = parseInt(pinStyle.left, RADIX) + shiftX;
-    var y = parseInt(pinStyle.top, RADIX) + shiftY;
-    return x + ', ' + y;
-  };
-
   var createPins = function (dataArray) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < dataArray.length; i++) {
@@ -40,7 +26,6 @@
 
   window.pin = {
     mapPin: mapPin,
-    calculateAddress: calculateAddress,
     createPins: createPins
   };
 })();

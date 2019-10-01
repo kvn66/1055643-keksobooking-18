@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var RADIX = 10;
+
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -135,12 +137,24 @@
     }
   };
 
+  var calculateAddress = function (isInit) {
+    var pinStyle = getComputedStyle(window.pin.mapPin);
+    var shiftX = Math.floor(parseInt(pinStyle.width, RADIX) / 2);
+    var shiftY = parseInt(pinStyle.height, RADIX);
+    if (isInit) {
+      shiftY = Math.floor(shiftY / 2);
+    }
+    var x = parseInt(pinStyle.left, RADIX) + shiftX;
+    var y = parseInt(pinStyle.top, RADIX) + shiftY;
+    return x + ', ' + y;
+  };
+
   var activateForm = function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
     document.querySelector('.map__filters').classList.remove('ad-form--disabled');
     enableElement(formFieldsets);
-    address.value = window.pin.calculateAddress(false);
+    address.value = calculateAddress(false);
   };
 
   var initForm = function () {
@@ -148,7 +162,7 @@
     formPrice.min = getMinPrice(formType).toString();
     changeCapacity();
     validateCapacity();
-    address.value = window.pin.calculateAddress(true);
+    address.value = calculateAddress(true);
   };
 
   initForm();
