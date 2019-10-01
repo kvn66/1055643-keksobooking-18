@@ -5,15 +5,15 @@ var address = document.querySelector('#address');
 var form = document.querySelector('.ad-form');
 var formFieldsets = form.querySelectorAll('fieldset');
 
-var disableFieldsets = function () {
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].disabled = true;
+var disableElement = function (element) {
+  for (var i = 0; i < element.length; i++) {
+    element[i].disabled = true;
   }
 };
 
-var enableFieldsets = function () {
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].disabled = false;
+var enableElement = function (element) {
+  for (var i = 0; i < element.length; i++) {
+    element[i].disabled = false;
   }
 };
 

@@ -17,13 +17,13 @@ var insertCard = function (dataArray) {
 };
 
 var calculateAddress = function (pinStyle, isInit) {
-  var shiftX = Math.floor(Number(pinStyle.width.slice(0, -2)) / 2);
-  var shiftY = Number(pinStyle.height.slice(0, -2));
+  var shiftX = Math.floor(parseInt(pinStyle.width, RADIX) / 2);
+  var shiftY = parseInt(pinStyle.height, RADIX);
   if (isInit) {
     shiftY = Math.floor(shiftY / 2);
   }
-  var x = Number(pinStyle.left.slice(0, -2)) + shiftX;
-  var y = Number(pinStyle.top.slice(0, -2)) + shiftY;
+  var x = parseInt(pinStyle.left, RADIX) + shiftX;
+  var y = parseInt(pinStyle.top, RADIX) + shiftY;
   return x + ', ' + y;
 };
 
@@ -34,7 +34,7 @@ var activatePage = function () {
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.map__filters').classList.remove('ad-form--disabled');
-  enableFieldsets();
+  enableElement(formFieldsets);
   address.value = calculateAddress(pinStyles, false);
 };
 
