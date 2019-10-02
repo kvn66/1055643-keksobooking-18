@@ -62,9 +62,7 @@
   var changeCapacity = function () {
     var selectedRoomNumber = getListSelected(formRoomNumber);
 
-    for (var i = 0; i < formCapacity.options.length; i++) {
-      formCapacity.options[i].disabled = true;
-    }
+    disableElement(formCapacity.options);
 
     switch (selectedRoomNumber) {
       case '3':
