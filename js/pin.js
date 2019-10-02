@@ -2,8 +2,23 @@
 
 (function () {
   var RADIX = 10;
+  var HEIGH_SHIFT = 15;
 
   var mapPin = document.querySelector('.map__pin--main');
+  var pinStyle = getComputedStyle(mapPin);
+
+  var getPinData = function (isInit) {
+    var shiftY = parseInt(pinStyle.height, RADIX) + HEIGH_SHIFT;
+    if (isInit) {
+      shiftY = Math.floor(shiftY / 2);
+    }
+    return {
+      shiftX: Math.floor(parseInt(pinStyle.width, RADIX) / 2),
+      shiftY: shiftY,
+      left: parseInt(pinStyle.left, RADIX),
+      top: parseInt(pinStyle.top, RADIX)
+    };
+  };
 
   var createPin = function (dataElement) {
     var similarPinTemplate = document.querySelector('#pin')
@@ -18,18 +33,6 @@
     return pinElement;
   };
 
-  var calculateAddress = function (isInit) {
-    var pinStyle = getComputedStyle(mapPin);
-    var shiftX = Math.floor(parseInt(pinStyle.width, RADIX) / 2);
-    var shiftY = parseInt(pinStyle.height, RADIX);
-    if (isInit) {
-      shiftY = Math.floor(shiftY / 2);
-    }
-    var x = parseInt(pinStyle.left, RADIX) + shiftX;
-    var y = parseInt(pinStyle.top, RADIX) + shiftY;
-    return x + ', ' + y;
-  };
-
   var createPins = function (dataArray) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < dataArray.length; i++) {
@@ -40,7 +43,7 @@
 
   window.pin = {
     mapPin: mapPin,
-    calculateAddress: calculateAddress,
+    getPinData: getPinData,
     createPins: createPins
   };
 })();

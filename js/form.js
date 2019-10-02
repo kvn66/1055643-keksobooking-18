@@ -133,12 +133,19 @@
     }
   };
 
+  var calculateAddress = function (isInit) {
+    var pin = window.pin.getPinData(isInit);
+    var x = pin.left + pin.shiftX;
+    var y = pin.top + pin.shiftY;
+    address.value = x + ', ' + y;
+  };
+
   var activateForm = function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
     document.querySelector('.map__filters').classList.remove('ad-form--disabled');
     enableElement(formFieldsets);
-    address.value = window.pin.calculateAddress(false);
+    calculateAddress(false);
   };
 
   var initForm = function () {
@@ -146,12 +153,13 @@
     formPrice.min = getMinPrice(formType).toString();
     changeCapacity();
     validateCapacity();
-    address.value = window.pin.calculateAddress(true);
+    calculateAddress(true);
   };
 
   initForm();
 
   window.form = {
-    activateForm: activateForm
+    activateForm: activateForm,
+    calculateAddress: calculateAddress
   };
 })();

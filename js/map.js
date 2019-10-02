@@ -3,6 +3,10 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var DATA_ARRAY_COUNT = 8;
+  var MIN_WIDTH = 0;
+  var MAX_WIDTH = 1200;
+  var MIN_HEIGHT = 0;
+  var MAX_HEIGHT = 750;
 
 
   var insertPins = function (dataArray) {
@@ -21,6 +25,8 @@
     insertCard(dataArray);
     window.form.activateForm();
   };
+
+  var pin = window.pin.getPinData(false);
 
   window.pin.mapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -43,9 +49,27 @@
         y: moveEvt.clientY
       };
 
-      window.pin.mapPin.style.top = (window.pin.mapPin.offsetTop - shift.y) + 'px';
-      window.pin.mapPin.style.left = (window.pin.mapPin.offsetLeft - shift.x) + 'px';
+      var currentPosition = {
+        x: window.pin.mapPin.offsetLeft - shift.x,
+        y: window.pin.mapPin.offsetTop - shift.y
+      };
 
+      if (currentPosition.x < MIN_WIDTH - pin.shiftX) {
+        currentPosition.x = MIN_WIDTH - pin.shiftX;
+      } else if (currentPosition.x > MAX_WIDTH - pin.shiftX) {
+        currentPosition.x = MAX_WIDTH - pin.shiftX;
+      }
+
+      if (currentPosition.y < MIN_HEIGHT) {
+        currentPosition.y = MIN_HEIGHT;
+      } else if (currentPosition.y > MAX_HEIGHT - pin.shiftY) {
+        currentPosition.y = MAX_HEIGHT - pin.shiftY;
+      }
+
+      window.pin.mapPin.style.top = currentPosition.y + 'px';
+      window.pin.mapPin.style.left = currentPosition.x + 'px';
+
+      window.form.calculateAddress(false);
     };
 
     var onMouseUp = function (upEvt) {
@@ -57,6 +81,8 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+
+    window.form.calculateAddress(false);
   });
 
   window.pin.mapPin.addEventListener('keydown', function (evt) {
