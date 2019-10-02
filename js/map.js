@@ -19,8 +19,27 @@
     map.insertBefore(window.card.createCard(dataArray, 0), map.querySelector('.map__filters-container'));
   };
 
+  var loadData = function () {
+    var URL = 'https://js.dump.academy/keksobooking/data';
+
+    var dataArray = null;
+
+    var onError = function (message) {
+      debugger;
+      throw new Error(message);
+    };
+
+    var onSuccess = function (data) {
+      debugger;
+      dataArray = data;
+    };
+
+    window.load(URL, onSuccess, onError);
+    return dataArray;
+  };
+
   var activatePage = function () {
-    var dataArray = window.createData.createDataArray(DATA_ARRAY_COUNT);
+    var dataArray = loadData();
     insertPins(dataArray);
     insertCard(dataArray);
     window.form.activateForm();
