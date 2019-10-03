@@ -41,9 +41,14 @@
     return fragment;
   };
 
+  var insertPins = function (dataArray) {
+    var mapPins = document.querySelector('.map__pins');
+    mapPins.appendChild(createPins(dataArray));
+  };
+
   window.pin = {
     mapPin: mapPin,
     getPinData: getPinData,
-    createPins: createPins
+    insertPins: insertPins
   };
 })();

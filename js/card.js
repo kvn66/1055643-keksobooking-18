@@ -63,7 +63,11 @@
     return cardElement;
   };
 
+  var insertCard = function (dataArray) {
+    window.util.map.insertBefore(createCard(dataArray, 0), window.util.mapFiltersContainer);
+  };
+
   window.card = {
-    createCard: createCard
+    insertCard: insertCard
   };
 })();

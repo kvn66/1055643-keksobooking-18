@@ -6,71 +6,10 @@
   var MAX_WIDTH = 1200;
   var MIN_HEIGHT = 0;
   var MAX_HEIGHT = 750;
-  var COUNTER = 3;
-
-  var data = null;
-  var map = document.querySelector('.map');
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
-
-  var insertPins = function (dataArray) {
-    var mapPins = document.querySelector('.map__pins');
-    mapPins.appendChild(window.pin.createPins(dataArray));
-  };
-
-  var insertCard = function (dataArray) {
-    map.insertBefore(window.card.createCard(dataArray, 0), mapFiltersContainer);
-  };
-
-  var createErrorPopup = function (message) {
-    var similarErrorTemplate = document.querySelector('#error')
-      .content
-      .querySelector('.error');
-    var errorElement = similarErrorTemplate.cloneNode(true);
-
-    errorElement.querySelector('.error__message').textContent = 'При загрузке объявлений произошла ошибка. ' + message;
-
-    return errorElement;
-  };
-
-  var counter = COUNTER;
-
-  var onErrorLoadData = function (message) {
-    var msg = '';
-    map.insertBefore(createErrorPopup(message), mapFiltersContainer);
-    var error = document.querySelector('.error');
-    var errorButton = error.querySelector('.error__button');
-    if (counter > 0) {
-      errorButton.addEventListener('mousedown', function (evt) {
-        evt.preventDefault();
-        error.remove();
-        loadData();
-      });
-    } else {
-      msg = 'Попробовать в другой раз';
-      errorButton.textContent = msg;
-      errorButton.addEventListener('mousedown', function (evt) {
-        evt.preventDefault();
-        error.remove();
-        throw new Error(message);
-      });
-    }
-    counter--;
-  };
-
-  var onSuccessLoadData = function (loadedData) {
-    data = loadedData;
-    insertPins(data);
-    insertCard(data);
-  };
-
-  var loadData = function () {
-    var URL = 'https://js.dump.academy/keksobooking/data';
-    window.load(URL, onSuccessLoadData, onErrorLoadData);
-  };
 
   var activatePage = function () {
-    if (data === null) {
-      loadData();
+    if (window.util.data === null) {
+      window.loadData();
     }
     window.form.activateForm();
   };
