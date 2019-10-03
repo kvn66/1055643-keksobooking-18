@@ -134,7 +134,7 @@
   };
 
   var calculateAddress = function (isInit) {
-    var pin = window.pin.getPinData(isInit);
+    var pin = window.pin.getMainPinData(isInit);
     var x = pin.left + pin.shiftX;
     var y = pin.top + pin.shiftY;
     address.value = x + ', ' + y;

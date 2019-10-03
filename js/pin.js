@@ -4,19 +4,19 @@
   var RADIX = 10;
   var HEIGH_SHIFT = 15;
 
-  var mapPin = document.querySelector('.map__pin--main');
-  var pinStyle = getComputedStyle(mapPin);
+  var mainPin = document.querySelector('.map__pin--main');
+  var mainPinStyle = getComputedStyle(mainPin);
 
-  var getPinData = function (isInit) {
-    var shiftY = parseInt(pinStyle.height, RADIX) + HEIGH_SHIFT;
+  var getMainPinData = function (isInit) {
+    var shiftY = parseInt(mainPinStyle.height, RADIX) + HEIGH_SHIFT;
     if (isInit) {
       shiftY = Math.floor(shiftY / 2);
     }
     return {
-      shiftX: Math.floor(parseInt(pinStyle.width, RADIX) / 2),
+      shiftX: Math.floor(parseInt(mainPinStyle.width, RADIX) / 2),
       shiftY: shiftY,
-      left: parseInt(pinStyle.left, RADIX),
-      top: parseInt(pinStyle.top, RADIX)
+      left: parseInt(mainPinStyle.left, RADIX),
+      top: parseInt(mainPinStyle.top, RADIX)
     };
   };
 
@@ -42,13 +42,13 @@
   };
 
   var insertPins = function (dataArray) {
-    var mapPins = document.querySelector('.map__pins');
-    mapPins.appendChild(createPins(dataArray));
+    var mainPins = document.querySelector('.map__pins');
+    mainPins.appendChild(createPins(dataArray));
   };
 
   window.pin = {
-    mapPin: mapPin,
-    getPinData: getPinData,
+    mainPin: mainPin,
+    getMainPinData: getMainPinData,
     insertPins: insertPins
   };
 })();
