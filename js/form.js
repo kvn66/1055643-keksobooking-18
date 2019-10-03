@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var RADIX = 10;
-
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
