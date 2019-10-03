@@ -2,12 +2,15 @@
 
 (function () {
   var ENTER_KEYCODE = 13;
-  var DATA_ARRAY_COUNT = 8;
   var MIN_WIDTH = 0;
   var MAX_WIDTH = 1200;
   var MIN_HEIGHT = 0;
   var MAX_HEIGHT = 750;
+  var COUNTER = 3;
 
+  var data = null;
+  var map = document.querySelector('.map');
+  var mapFiltersContainer = map.querySelector('.map__filters-container');
 
   var insertPins = function (dataArray) {
     var mapPins = document.querySelector('.map__pins');
@@ -15,33 +18,60 @@
   };
 
   var insertCard = function (dataArray) {
-    var map = document.querySelector('.map');
-    map.insertBefore(window.card.createCard(dataArray, 0), map.querySelector('.map__filters-container'));
+    map.insertBefore(window.card.createCard(dataArray, 0), mapFiltersContainer);
+  };
+
+  var createErrorPopup = function (message) {
+    var similarErrorTemplate = document.querySelector('#error')
+      .content
+      .querySelector('.error');
+    var errorElement = similarErrorTemplate.cloneNode(true);
+
+    errorElement.querySelector('.error__message').textContent = 'При загрузке объявлений произошла ошибка. ' + message;
+
+    return errorElement;
+  };
+
+  var counter = COUNTER;
+
+  var onErrorLoadData = function (message) {
+    var msg = '';
+    map.insertBefore(createErrorPopup(message), mapFiltersContainer);
+    var error = document.querySelector('.error');
+    var errorButton = error.querySelector('.error__button');
+    if (counter > 0) {
+      errorButton.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
+        error.remove();
+        loadData();
+      });
+    } else {
+      msg = 'Попробовать в другой раз';
+      errorButton.textContent = msg;
+      errorButton.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
+        error.remove();
+        throw new Error(message);
+      });
+    }
+    counter--;
+  };
+
+  var onSuccessLoadData = function (loadedData) {
+    data = loadedData;
+    insertPins(data);
+    insertCard(data);
   };
 
   var loadData = function () {
     var URL = 'https://js.dump.academy/keksobooking/data';
-
-    var dataArray = null;
-
-    var onError = function (message) {
-      debugger;
-      throw new Error(message);
-    };
-
-    var onSuccess = function (data) {
-      debugger;
-      dataArray = data;
-    };
-
-    window.load(URL, onSuccess, onError);
-    return dataArray;
+    window.load(URL, onSuccessLoadData, onErrorLoadData);
   };
 
   var activatePage = function () {
-    var dataArray = loadData();
-    insertPins(dataArray);
-    insertCard(dataArray);
+    if (data === null) {
+      loadData();
+    }
     window.form.activateForm();
   };
 
