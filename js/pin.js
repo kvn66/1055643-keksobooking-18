@@ -88,8 +88,8 @@
   };
 
   var insertPins = function (dataArray) {
-    var mainPins = document.querySelector('.map__pins');
-    mainPins.appendChild(createPins(dataArray));
+    var pins = document.querySelector('.map__pins');
+    pins.appendChild(createPins(dataArray));
     setEventHandlers();
   };
 
