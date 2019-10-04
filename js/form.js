@@ -4,8 +4,11 @@
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
-
   var formTitle = form.querySelector('#title');
+  var formType = form.querySelector('#type');
+  var formPrice = form.querySelector('#price');
+  var formTimeIn = form.querySelector('#timein');
+  var formTimeOut = form.querySelector('#timeout');
 
   formTitle.addEventListener('invalid', function () {
     if (formTitle.validity.tooShort) {
@@ -18,9 +21,6 @@
       formTitle.setCustomValidity('');
     }
   });
-
-  var formType = form.querySelector('#type');
-  var formPrice = form.querySelector('#price');
 
   var getListSelected = function (list) {
     return list.value;
@@ -51,7 +51,9 @@
   formPrice.addEventListener('invalid', onPriceInvalid);
 
   formType.addEventListener('change', function () {
-    formPrice.min = getMinPrice(formType).toString();
+    var minPrice = getMinPrice(formType).toString();
+    formPrice.min = minPrice;
+    formPrice.placeholder = minPrice;
     formPrice.removeEventListener('invalid', onPriceInvalid);
     formPrice.addEventListener('invalid', onPriceInvalid);
   });
@@ -121,6 +123,18 @@
     validateCapacity();
   });
 
+  var validateTimeInOut = function (listIn, listOut) {
+    listOut.selectedIndex = listIn.selectedIndex;
+  };
+
+  formTimeIn.addEventListener('change', function () {
+    validateTimeInOut(formTimeIn, formTimeOut);
+  });
+
+  formTimeOut.addEventListener('change', function () {
+    validateTimeInOut(formTimeOut, formTimeIn);
+  });
+
   var disableElement = function (element) {
     for (var i = 0; i < element.length; i++) {
       element[i].disabled = true;
@@ -150,7 +164,9 @@
 
   var initForm = function () {
     disableElement(formFieldsets);
-    formPrice.min = getMinPrice(formType).toString();
+    var minPrice = getMinPrice(formType).toString();
+    formPrice.min = minPrice;
+    formPrice.placeholder = minPrice;
     changeCapacity();
     validateCapacity();
     calculateAddress(true);
