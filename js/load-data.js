@@ -42,7 +42,6 @@
   var onSuccessLoadData = function (loadedData) {
     window.util.data = loadedData;
     window.pin.insertPins(loadedData);
-    window.card.insertCard(loadedData);
   };
 
   window.loadData = function () {

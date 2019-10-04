@@ -63,8 +63,12 @@
     return cardElement;
   };
 
-  var insertCard = function (dataArray) {
-    window.util.map.insertBefore(createCard(dataArray, 0), window.util.mapFiltersContainer);
+  var insertCard = function (dataArray, index) {
+    var card = document.querySelector('.map__card');
+    if (card) {
+      card.remove();
+    }
+    window.util.map.insertBefore(createCard(dataArray, index), window.util.mapFiltersContainer);
   };
 
   window.card = {
