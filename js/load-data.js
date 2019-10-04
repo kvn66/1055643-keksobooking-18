@@ -17,6 +17,7 @@
   var counter = COUNTER;
 
   var onErrorLoadData = function (message) {
+    debugger;
     var msg = '';
     window.util.map.insertBefore(createErrorPopup(message), window.util.mapFiltersContainer);
     var error = document.querySelector('.error');
@@ -40,12 +41,14 @@
   };
 
   var onSuccessLoadData = function (loadedData) {
+    debugger;
     window.util.data = loadedData;
     window.pin.insertPins(loadedData);
   };
 
   window.loadData = function () {
+    //debugger;
     var URL = 'https://js.dump.academy/keksobooking/data';
-    window.load(URL, onSuccessLoadData, onErrorLoadData);
+    window.transferData(URL, 'GET', onSuccessLoadData, onErrorLoadData, '');
   };
 })();
