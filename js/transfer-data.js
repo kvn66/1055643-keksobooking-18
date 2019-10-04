@@ -8,7 +8,7 @@
 
     xhr.responseType = 'json';
 
-    xhr.addEventListener('transferData', function () {
+    xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onSuccess(xhr.response);
       } else {

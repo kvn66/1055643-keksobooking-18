@@ -162,6 +162,14 @@
     calculateAddress(false);
   };
 
+  var deactivateForm = function () {
+    document.querySelector('.map').classList.add('map--faded');
+    document.querySelector('.ad-form').classList.add('ad-form--disabled');
+    document.querySelector('.map__filters').classList.add('ad-form--disabled');
+    disableElement(formFieldsets);
+    calculateAddress(true);
+  };
+
   var initForm = function () {
     disableElement(formFieldsets);
     var minPrice = getMinPrice(formType).toString();
@@ -173,6 +181,14 @@
   };
 
   initForm();
+
+  form.addEventListener('submit', function (evt) {
+    window.uploadData(new FormData(form), function () {
+      window.util.createSuccessPopup();
+    });
+    evt.preventDefault();
+  });
+
 
   window.form = {
     activateForm: activateForm,

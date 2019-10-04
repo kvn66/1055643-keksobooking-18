@@ -5,7 +5,7 @@
 
   var counter = COUNTER;
 
-  var onErrorLoadData = function (message) {
+  var onErrorUploadData = function (message) {
     var msg = '';
     window.util.map.insertBefore(window.util.createErrorPopup('При загрузке объявлений произошла ошибка. ' + message), window.util.mapFiltersContainer);
     var error = document.querySelector('.error');
@@ -28,13 +28,8 @@
     counter--;
   };
 
-  var onSuccessLoadData = function (loadedData) {
-    window.util.data = loadedData;
-    window.pin.insertPins(loadedData);
-  };
-
-  window.loadData = function () {
-    var URL = 'https://js.dump.academy/keksobooking/data';
-    window.transferData(URL, 'GET', onSuccessLoadData, onErrorLoadData);
+  window.uploadData = function (data, onSuccessUploadData) {
+    var URL = 'https://js.dump.academy/keksobooking';
+    window.transferData(URL, 'POST', onSuccessUploadData, onErrorUploadData, data);
   };
 })();
