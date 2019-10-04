@@ -60,7 +60,7 @@
     mapPinCollection.forEach(function (item) {
       if (!item.classList.contains('map__pin--main')) {
         item.addEventListener('click', function () {
-          openCard(this);
+          openCard(item);
         });
       }
     });
