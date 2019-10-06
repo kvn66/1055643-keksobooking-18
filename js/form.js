@@ -1,13 +1,14 @@
 'use strict';
 
 (function () {
-  var RADIX = 10;
-
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
-
   var formTitle = form.querySelector('#title');
+  var formType = form.querySelector('#type');
+  var formPrice = form.querySelector('#price');
+  var formTimeIn = form.querySelector('#timein');
+  var formTimeOut = form.querySelector('#timeout');
 
   formTitle.addEventListener('invalid', function () {
     if (formTitle.validity.tooShort) {
@@ -20,9 +21,6 @@
       formTitle.setCustomValidity('');
     }
   });
-
-  var formType = form.querySelector('#type');
-  var formPrice = form.querySelector('#price');
 
   var getListSelected = function (list) {
     return list.value;
@@ -53,7 +51,9 @@
   formPrice.addEventListener('invalid', onPriceInvalid);
 
   formType.addEventListener('change', function () {
-    formPrice.min = getMinPrice(formType).toString();
+    var minPrice = getMinPrice(formType).toString();
+    formPrice.min = minPrice;
+    formPrice.placeholder = minPrice;
     formPrice.removeEventListener('invalid', onPriceInvalid);
     formPrice.addEventListener('invalid', onPriceInvalid);
   });
@@ -123,6 +123,18 @@
     validateCapacity();
   });
 
+  var validateTimeInOut = function (listIn, listOut) {
+    listOut.selectedIndex = listIn.selectedIndex;
+  };
+
+  formTimeIn.addEventListener('change', function () {
+    validateTimeInOut(formTimeIn, formTimeOut);
+  });
+
+  formTimeOut.addEventListener('change', function () {
+    validateTimeInOut(formTimeOut, formTimeIn);
+  });
+
   var disableElement = function (element) {
     for (var i = 0; i < element.length; i++) {
       element[i].disabled = true;
@@ -136,15 +148,10 @@
   };
 
   var calculateAddress = function (isInit) {
-    var pinStyle = getComputedStyle(window.pin.mapPin);
-    var shiftX = Math.floor(parseInt(pinStyle.width, RADIX) / 2);
-    var shiftY = parseInt(pinStyle.height, RADIX);
-    if (isInit) {
-      shiftY = Math.floor(shiftY / 2);
-    }
-    var x = parseInt(pinStyle.left, RADIX) + shiftX;
-    var y = parseInt(pinStyle.top, RADIX) + shiftY;
-    return x + ', ' + y;
+    var pin = window.pin.getMainPinData(isInit);
+    var x = pin.left + pin.shiftX;
+    var y = pin.top + pin.shiftY;
+    address.value = x + ', ' + y;
   };
 
   var activateForm = function () {
@@ -152,20 +159,23 @@
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
     document.querySelector('.map__filters').classList.remove('ad-form--disabled');
     enableElement(formFieldsets);
-    address.value = calculateAddress(false);
+    calculateAddress(false);
   };
 
   var initForm = function () {
     disableElement(formFieldsets);
-    formPrice.min = getMinPrice(formType).toString();
+    var minPrice = getMinPrice(formType).toString();
+    formPrice.min = minPrice;
+    formPrice.placeholder = minPrice;
     changeCapacity();
     validateCapacity();
-    address.value = calculateAddress(true);
+    calculateAddress(true);
   };
 
   initForm();
 
   window.form = {
-    activateForm: activateForm
+    activateForm: activateForm,
+    calculateAddress: calculateAddress
   };
 })();
