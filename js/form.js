@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var COUNTER = 3;
+
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -162,6 +164,17 @@
     calculateAddress(false);
   };
 
+  var activatePage = function () {
+    //debugger;
+    if (window.util.originalDOM === undefined) {
+      window.util.originalDOM = document.querySelector('main').cloneNode(true);
+    }
+    if (window.util.data === null) {
+      window.loadData();
+    }
+    activateForm();
+  };
+
   var deactivateForm = function () {
     document.querySelector('.map').classList.add('map--faded');
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
@@ -182,16 +195,69 @@
 
   initForm();
 
+  var resetForm = function () {
+    //debugger;
+    document.querySelector('body').replaceChild(window.util.originalDOM, document.querySelector('main'));
+    deactivateForm();
+    window.util.deinitPage();
+    window.util.initPage();
+  };
+
+  var counter = COUNTER;
+
+  var onErrorUploadData = function (message) {
+    var msg = '';
+    window.util.createErrorPopup('При загрузке объявлений произошла ошибка. ' + message);
+    var error = document.querySelector('.error');
+    var errorButton = error.querySelector('.error__button');
+    if (counter > 0) {
+      errorButton.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
+        error.remove();
+        window.loadData();
+      });
+    } else {
+      msg = 'Попробовать в другой раз';
+      errorButton.textContent = msg;
+      errorButton.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
+        error.remove();
+        throw new Error(message);
+      });
+    }
+    counter--;
+  };
+
+  var closeSuccessPopup = function () {
+    var success = document.querySelector('.success');
+    success.remove();
+    document.removeEventListener('click', closeSuccessPopup);
+    document.removeEventListener('keydown', onEscPress);
+
+    resetForm();
+  };
+
+  var onEscPress = function (evt) {
+    if (evt.which === window.util.ESC_KEYCODE) {
+      closeSuccessPopup();
+    }
+  };
+
+  var onSuccessUploadData = function () {
+    window.util.createSuccessPopup();
+
+    document.addEventListener('click', closeSuccessPopup);
+    document.addEventListener('keydown', onEscPress);
+  };
+
   form.addEventListener('submit', function (evt) {
-    window.uploadData(new FormData(form), function () {
-      window.util.createSuccessPopup();
-    });
+    window.uploadData(new FormData(form), onSuccessUploadData, onErrorUploadData);
     evt.preventDefault();
   });
 
 
   window.form = {
-    activateForm: activateForm,
+    activatePage: activatePage,
     calculateAddress: calculateAddress
   };
 })();

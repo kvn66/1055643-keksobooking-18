@@ -7,18 +7,11 @@
   var MIN_HEIGHT = 0;
   var MAX_HEIGHT = 750;
 
-  var activatePage = function () {
-    if (window.util.data === null) {
-      window.loadData();
-    }
-    window.form.activateForm();
-  };
-
   var pin = window.pin.getMainPinData(false);
 
-  window.pin.mainPin.addEventListener('mousedown', function (evt) {
+  var onMouseDown = function (evt) {
     evt.preventDefault();
-    activatePage();
+    window.form.activatePage();
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
@@ -71,11 +64,25 @@
     document.addEventListener('mouseup', onMouseUp);
 
     window.form.calculateAddress(false);
-  });
+  };
 
-  window.pin.mainPin.addEventListener('keydown', function (evt) {
+  var onEnterPress = function (evt) {
     if (evt.which === ENTER_KEYCODE) {
-      activatePage();
+      window.form.activatePage();
     }
-  });
+  };
+
+  window.util.initPage = function () {
+    window.pin.mainPin.addEventListener('mousedown', onMouseDown);
+
+    window.pin.mainPin.addEventListener('keydown', onEnterPress);
+  };
+
+  window.util.deinitPage = function () {
+    window.pin.mainPin.removeEventListener('mousedown', onMouseDown);
+
+    window.pin.mainPin.removeEventListener('keydown', onEnterPress);
+  };
+
+  window.util.initPage();
 })();

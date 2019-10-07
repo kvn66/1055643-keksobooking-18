@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
   var RADIX = 10;
   var HEIGH_SHIFT = 15;
 
@@ -35,7 +34,7 @@
   var card = null;
 
   var onPopupEscPress = function (evt) {
-    if (evt.which === ESC_KEYCODE) {
+    if (evt.which === window.util.ESC_KEYCODE) {
       closeCard();
     }
   };
