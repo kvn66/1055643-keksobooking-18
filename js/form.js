@@ -9,6 +9,7 @@
   var formPrice = form.querySelector('#price');
   var formTimeIn = form.querySelector('#timein');
   var formTimeOut = form.querySelector('#timeout');
+  var formResetButton = form.querySelector('.ad-form__reset');
 
   formTitle.addEventListener('invalid', function () {
     if (formTitle.validity.tooShort) {
@@ -162,6 +163,21 @@
     calculateAddress(false);
   };
 
+  var activatePage = function () {
+    if (window.util.data === null) {
+      window.loadData();
+    }
+    activateForm();
+  };
+
+  var deactivateForm = function () {
+    document.querySelector('.map').classList.add('map--faded');
+    document.querySelector('.ad-form').classList.add('ad-form--disabled');
+    document.querySelector('.map__filters').classList.add('ad-form--disabled');
+    disableElement(formFieldsets);
+    calculateAddress(true);
+  };
+
   var initForm = function () {
     disableElement(formFieldsets);
     var minPrice = getMinPrice(formType).toString();
@@ -174,8 +190,71 @@
 
   initForm();
 
+  var resetPage = function () {
+    document.forms[0].reset();
+    document.forms[1].reset();
+    deactivateForm();
+    window.pin.closeCard();
+    window.pin.removePins();
+    window.pin.resetMainPinPosition();
+    calculateAddress(true);
+  };
+
+  formResetButton.addEventListener('click', resetPage);
+
+  var closeErrorPopup = function () {
+    var error = document.querySelector('.error');
+    error.remove();
+    document.removeEventListener('click', closeErrorPopup);
+    document.removeEventListener('keydown', onErrorEscPress);
+  };
+
+  var onErrorEscPress = function (evt) {
+    if (evt.which === window.util.ESC_KEYCODE) {
+      closeErrorPopup();
+    }
+  };
+
+  var onErrorUploadData = function (message) {
+    window.util.createErrorPopup('При отправке формы произошла ошибка. ' + message);
+    var error = document.querySelector('.error');
+    var errorButton = error.querySelector('.error__button');
+    errorButton.textContent = 'Закрыть';
+    errorButton.addEventListener('click', closeErrorPopup);
+    document.addEventListener('click', closeErrorPopup);
+    document.addEventListener('keydown', onErrorEscPress);
+  };
+
+  var closeSuccessPopup = function () {
+    var success = document.querySelector('.success');
+    success.remove();
+    document.removeEventListener('click', closeSuccessPopup);
+    document.removeEventListener('keydown', onSuccessEscPress);
+
+    resetPage();
+  };
+
+  var onSuccessEscPress = function (evt) {
+    if (evt.which === window.util.ESC_KEYCODE) {
+      closeSuccessPopup();
+    }
+  };
+
+  var onSuccessUploadData = function () {
+    window.util.createSuccessPopup();
+
+    document.addEventListener('click', closeSuccessPopup);
+    document.addEventListener('keydown', onSuccessEscPress);
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.uploadData(new FormData(form), onSuccessUploadData, onErrorUploadData);
+    evt.preventDefault();
+  });
+
+
   window.form = {
-    activateForm: activateForm,
+    activatePage: activatePage,
     calculateAddress: calculateAddress
   };
 })();
