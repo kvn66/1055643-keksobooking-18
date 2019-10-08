@@ -72,17 +72,10 @@
     }
   };
 
-  window.util.initPage = function () {
+  var initPage = function () {
     window.pin.mainPin.addEventListener('mousedown', onMouseDown);
-
     window.pin.mainPin.addEventListener('keydown', onEnterPress);
   };
 
-  window.util.deinitPage = function () {
-    window.pin.mainPin.removeEventListener('mousedown', onMouseDown);
-
-    window.pin.mainPin.removeEventListener('keydown', onEnterPress);
-  };
-
-  window.util.initPage();
+  initPage();
 })();

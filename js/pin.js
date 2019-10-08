@@ -7,6 +7,16 @@
   var mainPin = document.querySelector('.map__pin--main');
   var mainPinStyle = getComputedStyle(mainPin);
 
+  var mainPinDefaultPosition = {
+    x: mainPinStyle.left,
+    y: mainPinStyle.top
+  };
+
+  var resetMainPinPosition = function () {
+    mainPin.style.top = mainPinDefaultPosition.y;
+    mainPin.style.left = mainPinDefaultPosition.x;
+  };
+
   var getMainPinData = function (isInit) {
     var shiftY = parseInt(mainPinStyle.height, RADIX) + HEIGH_SHIFT;
     if (isInit) {
@@ -31,8 +41,6 @@
     return 0;
   };
 
-  var card = null;
-
   var onPopupEscPress = function (evt) {
     if (evt.which === window.util.ESC_KEYCODE) {
       closeCard();
@@ -40,13 +48,16 @@
   };
 
   var closeCard = function () {
-    card.remove();
+    var card = document.querySelector('.map__card');
+    if (card !== null) {
+      card.remove();
+    }
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
   var openCard = function (pin) {
     window.card.insertCard(window.util.data, searchPinIndex(window.util.data, pin));
-    card = document.querySelector('.map__card');
+    var card = document.querySelector('.map__card');
     var cardCloseButton = card.querySelector('.popup__close');
     cardCloseButton.addEventListener('click', function () {
       closeCard();
@@ -92,9 +103,22 @@
     setEventHandlers();
   };
 
+  var removePins = function () {
+    var pins = document.querySelectorAll('.map__pin');
+    pins.forEach(function (item) {
+      if (!item.classList.contains('map__pin--main')) {
+        item.remove();
+      }
+    });
+    window.util.data = null;
+  };
+
   window.pin = {
     mainPin: mainPin,
     getMainPinData: getMainPinData,
-    insertPins: insertPins
+    closeCard: closeCard,
+    insertPins: insertPins,
+    removePins: removePins,
+    resetMainPinPosition: resetMainPinPosition
   };
 })();

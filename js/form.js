@@ -11,6 +11,7 @@
   var formPrice = form.querySelector('#price');
   var formTimeIn = form.querySelector('#timein');
   var formTimeOut = form.querySelector('#timeout');
+  var formResetButton = form.querySelector('.ad-form__reset');
 
   formTitle.addEventListener('invalid', function () {
     if (formTitle.validity.tooShort) {
@@ -165,10 +166,6 @@
   };
 
   var activatePage = function () {
-    //debugger;
-    if (window.util.originalDOM === undefined) {
-      window.util.originalDOM = document.querySelector('main').cloneNode(true);
-    }
     if (window.util.data === null) {
       window.loadData();
     }
@@ -195,49 +192,51 @@
 
   initForm();
 
-  var resetForm = function () {
-    //debugger;
-    document.querySelector('body').replaceChild(window.util.originalDOM, document.querySelector('main'));
+  var resetPage = function () {
+    document.forms[0].reset();
+    document.forms[1].reset();
     deactivateForm();
-    window.util.deinitPage();
-    window.util.initPage();
+    window.pin.closeCard();
+    window.pin.removePins();
+    window.pin.resetMainPinPosition();
+    calculateAddress(true);
   };
 
-  var counter = COUNTER;
+  formResetButton.addEventListener('click', resetPage);
+
+  var closeErrorPopup = function () {
+    var error = document.querySelector('.error');
+    error.remove();
+    document.removeEventListener('click', closeErrorPopup);
+    document.removeEventListener('keydown', onErrorEscPress);
+  };
+
+  var onErrorEscPress = function (evt) {
+    if (evt.which === window.util.ESC_KEYCODE) {
+      closeErrorPopup();
+    }
+  };
 
   var onErrorUploadData = function (message) {
-    var msg = '';
-    window.util.createErrorPopup('При загрузке объявлений произошла ошибка. ' + message);
+    window.util.createErrorPopup('При отправке формы произошла ошибка. ' + message);
     var error = document.querySelector('.error');
     var errorButton = error.querySelector('.error__button');
-    if (counter > 0) {
-      errorButton.addEventListener('mousedown', function (evt) {
-        evt.preventDefault();
-        error.remove();
-        window.loadData();
-      });
-    } else {
-      msg = 'Попробовать в другой раз';
-      errorButton.textContent = msg;
-      errorButton.addEventListener('mousedown', function (evt) {
-        evt.preventDefault();
-        error.remove();
-        throw new Error(message);
-      });
-    }
-    counter--;
+    errorButton.textContent = 'Закрыть';
+    errorButton.addEventListener('click', closeErrorPopup);
+    document.addEventListener('click', closeErrorPopup);
+    document.addEventListener('keydown', onErrorEscPress);
   };
 
   var closeSuccessPopup = function () {
     var success = document.querySelector('.success');
     success.remove();
     document.removeEventListener('click', closeSuccessPopup);
-    document.removeEventListener('keydown', onEscPress);
+    document.removeEventListener('keydown', onSuccessEscPress);
 
-    resetForm();
+    resetPage();
   };
 
-  var onEscPress = function (evt) {
+  var onSuccessEscPress = function (evt) {
     if (evt.which === window.util.ESC_KEYCODE) {
       closeSuccessPopup();
     }
@@ -247,7 +246,7 @@
     window.util.createSuccessPopup();
 
     document.addEventListener('click', closeSuccessPopup);
-    document.addEventListener('keydown', onEscPress);
+    document.addEventListener('keydown', onSuccessEscPress);
   };
 
   form.addEventListener('submit', function (evt) {
