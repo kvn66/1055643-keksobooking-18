@@ -99,7 +99,7 @@
 
   var insertPins = function (dataArray) {
     var pins = document.querySelector('.map__pins');
-    pins.appendChild(createPins(dataArray));
+    pins.appendChild(createPins(dataArray.slice(0, window.filter.MAX_VISIBLE_PINS)));
     setEventHandlers();
   };
 
