@@ -30,7 +30,7 @@
 
   var onSuccessLoadData = function (loadedData) {
     window.util.data = loadedData;
-    window.pin.insertPins(loadedData);
+    window.pin.insertPins();
   };
 
   window.loadData = function () {

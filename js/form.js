@@ -196,6 +196,7 @@
     deactivateForm();
     window.pin.closeCard();
     window.pin.removePins();
+    window.util.data = null;
     window.pin.resetMainPinPosition();
     calculateAddress(true);
   };

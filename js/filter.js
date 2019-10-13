@@ -2,44 +2,48 @@
 
 (function () {
   var MAX_VISIBLE_PINS = 5;
+
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-  var filterDefinition = {
-    housingType: mapFiltersContainer.querySelector('#housing-type'),
-    housingPrice: mapFiltersContainer.querySelector('#housing-price'),
-    housingRooms: mapFiltersContainer.querySelector('#housing-rooms'),
-    housingGuests: mapFiltersContainer.querySelector('#housing-guests'),
-    filterWifi: mapFiltersContainer.querySelector('#filter-wifi'),
-    filterDishwasher: mapFiltersContainer.querySelector('#filter-dishwasher'),
-    filterParking: mapFiltersContainer.querySelector('#filter-parking'),
-    filterWasher: mapFiltersContainer.querySelector('#filter-washer'),
-    filterElevator: mapFiltersContainer.querySelector('#filter-elevator'),
-    filterConditioner: mapFiltersContainer.querySelector('#filter-conditioner')
+  var filterDefinition = [
+    mapFiltersContainer.querySelector('#housing-type'),
+    mapFiltersContainer.querySelector('#housing-price'),
+    mapFiltersContainer.querySelector('#housing-rooms'),
+    mapFiltersContainer.querySelector('#housing-guests'),
+    mapFiltersContainer.querySelector('#filter-wifi'),
+    mapFiltersContainer.querySelector('#filter-dishwasher'),
+    mapFiltersContainer.querySelector('#filter-parking'),
+    mapFiltersContainer.querySelector('#filter-washer'),
+    mapFiltersContainer.querySelector('#filter-elevator'),
+    mapFiltersContainer.querySelector('#filter-conditioner')
+  ];
+
+  var onFilterChange = function () {
+    window.pin.closeCard();
+    window.pin.removePins();
+    window.pin.insertPins();
   };
 
-  var filterCondition = {
-    housingType: filterDefinition.housingType.value,
-    housingPrice: filterDefinition.housingPrice.value,
-    housingRooms: filterDefinition.housingRooms.value,
-    housingGuests: filterDefinition.housingGuests.value,
-    isFilterWifi: filterDefinition.filterWifi.checked,
-    isFilterDishwasher: filterDefinition.filterDishwasher.checked,
-    isFilterParking: filterDefinition.filterParking.checked,
-    isFilterWasher: filterDefinition.filterWasher.checked,
-    isFilterElevator: filterDefinition.filterElevator.checked,
-    isFilterConditioner: filterDefinition.filterConditioner.checked
+  var initFilter = function () {
+    filterDefinition.forEach(function (value) {
+      value.addEventListener('change', onFilterChange);
+    });
   };
 
-  filterDefinition.filterWifi.addEventListener('change', function () {
-    alert(this.value);
-  });
+  initFilter();
+
+  var filterHousingType = function (item) {
+    var type = filterDefinition[0].value;
+    return item.offer.type === type || type === 'any';
+  };
 
   var filterData = function (origData) {
-    var data = 7;
+    var data = origData.slice();
+    data = data.filter(filterHousingType);
+    return data.slice(0, MAX_VISIBLE_PINS);
   };
 
   window.filter = {
-    MAX_VISIBLE_PINS: MAX_VISIBLE_PINS,
-    filterCondition: filterCondition
+    filterData: filterData
   };
 })();

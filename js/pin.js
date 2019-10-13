@@ -97,9 +97,9 @@
     return fragment;
   };
 
-  var insertPins = function (dataArray) {
+  var insertPins = function () {
     var pins = document.querySelector('.map__pins');
-    pins.appendChild(createPins(dataArray.slice(0, window.filter.MAX_VISIBLE_PINS)));
+    pins.appendChild(createPins(window.filter.filterData(window.util.data)));
     setEventHandlers();
   };
 
@@ -110,7 +110,6 @@
         item.remove();
       }
     });
-    window.util.data = null;
   };
 
   window.pin = {
