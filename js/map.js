@@ -4,8 +4,8 @@
   var ENTER_KEYCODE = 13;
   var MIN_WIDTH = 0;
   var MAX_WIDTH = 1200;
-  var MIN_HEIGHT = 0;
-  var MAX_HEIGHT = 750;
+  var MIN_HEIGHT = 50;
+  var MAX_HEIGHT = 630;
 
   var pin = window.pin.getMainPinData(false);
 

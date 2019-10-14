@@ -68,6 +68,7 @@
 
   var filter = function (item) {
     var out = true;
+    out = out && (item.offer !== null);
     out = out && (item.offer.type === filterSelectDefinition[0].value || filterSelectDefinition[0].value === 'any');
     out = out && priceFilter(item);
     out = out && (item.offer.rooms.toString() === filterSelectDefinition[2].value || filterSelectDefinition[2].value === 'any');
