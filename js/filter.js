@@ -4,6 +4,7 @@
   var MAX_VISIBLE_PINS = 5;
   var LOW_PRICE_FILTER = 10000;
   var HIGH_PRICE_FILTER = 50000;
+  var DEBOUNCE_INTERVAL = 500; // ms
 
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
@@ -23,11 +24,11 @@
     mapFiltersContainer.querySelector('#filter-conditioner')
   ];
 
-  var onFilterChange = window.debounce(function () {
+  var onFilterChange = window.util.debounce(function () {
     window.pin.closeCard();
     window.pin.removePins();
     window.pin.insertPins();
-  });
+  }, DEBOUNCE_INTERVAL);
 
   var initFilter = function () {
     filterSelectDefinition.forEach(function (item) {

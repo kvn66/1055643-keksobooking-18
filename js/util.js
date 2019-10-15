@@ -25,6 +25,20 @@
     main.insertBefore(successElement, map);
   };
 
+  var debounce = function (cb, debounceInterval) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, debounceInterval);
+    };
+  };
+
 
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
@@ -32,6 +46,7 @@
     map: map,
     mapFiltersContainer: mapFiltersContainer,
     createErrorPopup: createErrorPopup,
-    createSuccessPopup: createSuccessPopup
+    createSuccessPopup: createSuccessPopup,
+    debounce: debounce
   };
 })();
