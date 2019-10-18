@@ -65,13 +65,13 @@
   };
 
   var getMinPrice = function (list) {
-    var minPrice = {
+    var MinPrice = {
       FLAT: 1000,
       BUNGALO: 0,
       HOUSE: 5000,
       PALACE: 10000
     };
-    return minPrice[getListSelected(list)];
+    return MinPrice[getListSelected(list).toUpperCase()];
   };
 
   var onPriceInvalid = function () {
