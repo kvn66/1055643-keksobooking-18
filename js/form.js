@@ -66,10 +66,10 @@
 
   var getMinPrice = function (list) {
     var minPrice = {
-      flat: 1000,
-      bungalo: 0,
-      house: 5000,
-      palace: 10000
+      FLAT: 1000,
+      BUNGALO: 0,
+      HOUSE: 5000,
+      PALACE: 10000
     };
     return minPrice[getListSelected(list)];
   };
