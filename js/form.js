@@ -17,24 +17,28 @@
   var formImages = form.querySelector('.ad-form__photo');
 
   formAvatarInput.addEventListener('change', function () {
-    var reader = new FileReader();
-    reader.addEventListener('load', function () {
-      formAvatarImage.src = reader.result;
-    });
+    if (formAvatarInput.files[0].type.match('image.*')) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        formAvatarImage.src = reader.result;
+      });
 
-    reader.readAsDataURL(formAvatarInput.files[0]);
+      reader.readAsDataURL(formAvatarInput.files[0]);
+    }
   });
 
   formImageInput.addEventListener('change', function () {
-    var reader = new FileReader();
-    reader.addEventListener('load', function () {
-      var image = document.createElement('img');
-      image.src = reader.result;
-      image.alt = '';
-      formImages.appendChild(image);
-    });
+    if (formImageInput.files[0].type.match('image.*')) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        var image = document.createElement('img');
+        image.src = reader.result;
+        image.alt = '';
+        formImages.appendChild(image);
+      });
 
-    reader.readAsDataURL(formImageInput.files[0]);
+      reader.readAsDataURL(formImageInput.files[0]);
+    }
   });
 
   var deleteImages = function () {
