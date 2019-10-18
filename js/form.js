@@ -18,8 +18,8 @@
 
   formAvatarInput.addEventListener('change', function () {
     var reader = new FileReader();
-    reader.addEventListener('load', function (evt) {
-      formAvatarImage.src = evt.target.result;
+    reader.addEventListener('load', function () {
+      formAvatarImage.src = reader.result;
     });
 
     reader.readAsDataURL(formAvatarInput.files[0]);
@@ -27,9 +27,9 @@
 
   formImageInput.addEventListener('change', function () {
     var reader = new FileReader();
-    reader.addEventListener('load', function (evt) {
+    reader.addEventListener('load', function () {
       var image = document.createElement('img');
-      image.src = evt.target.result;
+      image.src = reader.result;
       image.alt = '';
       formImages.appendChild(image);
     });
