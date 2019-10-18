@@ -10,6 +10,39 @@
   var formTimeIn = form.querySelector('#timein');
   var formTimeOut = form.querySelector('#timeout');
   var formResetButton = form.querySelector('.ad-form__reset');
+  var formAvatarInput = form.querySelector('#avatar');
+  var formAvatarImage = form.querySelector('.ad-form-header__preview').querySelector('img');
+  var formAvatarImageDefault = form.querySelector('.ad-form-header__preview').querySelector('img').src;
+  var formImageInput = form.querySelector('#images');
+  var formImages = form.querySelector('.ad-form__photo');
+
+  formAvatarInput.addEventListener('change', function () {
+    var reader = new FileReader();
+    reader.addEventListener('load', function (evt) {
+      formAvatarImage.src = evt.target.result;
+    });
+
+    reader.readAsDataURL(formAvatarInput.files[0]);
+  });
+
+  formImageInput.addEventListener('change', function () {
+    var reader = new FileReader();
+    reader.addEventListener('load', function (evt) {
+      var image = document.createElement('img');
+      image.src = evt.target.result;
+      image.alt = '';
+      formImages.appendChild(image);
+    });
+
+    reader.readAsDataURL(formImageInput.files[0]);
+  });
+
+  var deleteImages = function () {
+    var images = formImages.querySelectorAll('img');
+    images.forEach(function (item) {
+      item.remove();
+    });
+  };
 
   formTitle.addEventListener('invalid', function () {
     if (formTitle.validity.tooShort) {
@@ -199,6 +232,8 @@
     window.util.data = null;
     window.pin.resetMainPinPosition();
     calculateAddress(true);
+    formAvatarImage.src = formAvatarImageDefault;
+    deleteImages();
   };
 
   formResetButton.addEventListener('click', resetPage);
