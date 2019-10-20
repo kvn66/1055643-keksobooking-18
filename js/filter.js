@@ -8,14 +8,14 @@
 
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-  var filterSelectDefinition = [
+  var filterSelectDefinitions = [
     mapFiltersContainer.querySelector('#housing-type'),
     mapFiltersContainer.querySelector('#housing-price'),
     mapFiltersContainer.querySelector('#housing-rooms'),
     mapFiltersContainer.querySelector('#housing-guests')
   ];
 
-  var filterCheckDefinition = [
+  var filterCheckDefinitions = [
     mapFiltersContainer.querySelector('#filter-wifi'),
     mapFiltersContainer.querySelector('#filter-dishwasher'),
     mapFiltersContainer.querySelector('#filter-parking'),
@@ -31,10 +31,10 @@
   }, DEBOUNCE_INTERVAL);
 
   var initFilter = function () {
-    filterSelectDefinition.forEach(function (item) {
+    filterSelectDefinitions.forEach(function (item) {
       item.addEventListener('change', onFilterChange);
     });
-    filterCheckDefinition.forEach(function (item) {
+    filterCheckDefinitions.forEach(function (item) {
       item.addEventListener('change', onFilterChange);
     });
   };
@@ -43,7 +43,7 @@
 
   var checkFilter = function (item) {
     var out = true;
-    filterCheckDefinition.forEach(function (it) {
+    filterCheckDefinitions.forEach(function (it) {
       if (it.checked) {
         out = out && item.offer.features.includes(it.value);
       }
@@ -53,7 +53,7 @@
 
   var priceFilter = function (item) {
     var out = true;
-    switch (filterSelectDefinition[1].value) {
+    switch (filterSelectDefinitions[1].value) {
       case 'middle':
         out = out && item.offer.price >= LOW_PRICE_FILTER && item.offer.price <= HIGH_PRICE_FILTER;
         break;
@@ -70,10 +70,10 @@
   var filter = function (item) {
     var out = true;
     out = out && (item.offer !== null);
-    out = out && (item.offer.type === filterSelectDefinition[0].value || filterSelectDefinition[0].value === 'any');
+    out = out && (item.offer.type === filterSelectDefinitions[0].value || filterSelectDefinitions[0].value === 'any');
     out = out && priceFilter(item);
-    out = out && (item.offer.rooms.toString() === filterSelectDefinition[2].value || filterSelectDefinition[2].value === 'any');
-    out = out && (item.offer.guests.toString() === filterSelectDefinition[3].value || filterSelectDefinition[3].value === 'any');
+    out = out && (item.offer.rooms.toString() === filterSelectDefinitions[2].value || filterSelectDefinitions[2].value === 'any');
+    out = out && (item.offer.guests.toString() === filterSelectDefinitions[3].value || filterSelectDefinitions[3].value === 'any');
     out = out && checkFilter(item);
     return out;
   };

@@ -10,6 +10,43 @@
   var formTimeIn = form.querySelector('#timein');
   var formTimeOut = form.querySelector('#timeout');
   var formResetButton = form.querySelector('.ad-form__reset');
+  var formAvatarInput = form.querySelector('#avatar');
+  var formAvatarImage = form.querySelector('.ad-form-header__preview').querySelector('img');
+  var formAvatarImageDefault = form.querySelector('.ad-form-header__preview').querySelector('img').src;
+  var formImageInput = form.querySelector('#images');
+  var formImages = form.querySelector('.ad-form__photo');
+
+  formAvatarInput.addEventListener('change', function () {
+    if (formAvatarInput.files[0].type.match('image.*')) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        formAvatarImage.src = reader.result;
+      });
+
+      reader.readAsDataURL(formAvatarInput.files[0]);
+    }
+  });
+
+  formImageInput.addEventListener('change', function () {
+    if (formImageInput.files[0].type.match('image.*')) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        var image = document.createElement('img');
+        image.src = reader.result;
+        image.alt = '';
+        formImages.appendChild(image);
+      });
+
+      reader.readAsDataURL(formImageInput.files[0]);
+    }
+  });
+
+  var deleteImages = function () {
+    var images = formImages.querySelectorAll('img');
+    images.forEach(function (item) {
+      item.remove();
+    });
+  };
 
   formTitle.addEventListener('invalid', function () {
     if (formTitle.validity.tooShort) {
@@ -28,13 +65,13 @@
   };
 
   var getMinPrice = function (list) {
-    var minPrice = {
-      flat: 1000,
-      bungalo: 0,
-      house: 5000,
-      palace: 10000
+    var MinPrice = {
+      FLAT: 1000,
+      BUNGALO: 0,
+      HOUSE: 5000,
+      PALACE: 10000
     };
-    return minPrice[getListSelected(list)];
+    return MinPrice[getListSelected(list).toUpperCase()];
   };
 
   var onPriceInvalid = function () {
@@ -199,6 +236,8 @@
     window.util.data = null;
     window.pin.resetMainPinPosition();
     calculateAddress(true);
+    formAvatarImage.src = formAvatarImageDefault;
+    deleteImages();
   };
 
   formResetButton.addEventListener('click', resetPage);
