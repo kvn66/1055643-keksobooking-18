@@ -12,12 +12,12 @@
   },
   "devDependencies": {
     "eslint": "6.3.0",
-    "eslint-config-htmlacademy": "0.5.2",
+    "eslint-config-htmlacademy": "0.5.2"
   },
   "license": "MIT",
   "dependencies": {},
   "scripts": {
-    "test": "eslint js/",
+    "test": "eslint js/"
   },
   "engines": {
     "node": "8.11"
