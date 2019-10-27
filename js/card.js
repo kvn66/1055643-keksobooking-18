@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+window.card = (function () {
   var PHOTO_WIDTH = 45;
   var PHOTO_HEIGHT = 40;
 
@@ -68,10 +68,35 @@
     if (card) {
       card.remove();
     }
-    window.util.map.insertBefore(createCard(dataArray, index), window.util.mapFiltersContainer);
+    window.util.map.insertBefore(createCard(dataArray, index), window.filter.mapFiltersContainer);
   };
 
-  window.card = {
-    insertCard: insertCard
+  var onPopupEscPress = function (evt) {
+    if (evt.which === window.util.ESC_KEYCODE) {
+      closeCard();
+    }
+  };
+
+  var closeCard = function () {
+    var card = document.querySelector('.map__card');
+    if (card !== null) {
+      card.remove();
+    }
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+  var openCard = function (pin) {
+    insertCard(window.loadData.data, window.pin.searchPinIndex(window.loadData.data, pin));
+    var card = document.querySelector('.map__card');
+    var cardCloseButton = card.querySelector('.popup__close');
+    cardCloseButton.addEventListener('click', function () {
+      closeCard();
+    });
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
+  return {
+    openCard: openCard,
+    closeCard: closeCard
   };
 })();

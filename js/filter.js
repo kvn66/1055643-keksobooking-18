@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+window.filter = (function () {
   var MAX_VISIBLE_PINS = 5;
   var LOW_PRICE_FILTER = 10000;
   var HIGH_PRICE_FILTER = 50000;
@@ -25,21 +25,10 @@
   ];
 
   var onFilterChange = window.util.debounce(function () {
-    window.pin.closeCard();
+    window.card.closeCard();
     window.pin.removePins();
     window.pin.insertPins();
   }, DEBOUNCE_INTERVAL);
-
-  var initFilter = function () {
-    filterSelectDefinitions.forEach(function (item) {
-      item.addEventListener('change', onFilterChange);
-    });
-    filterCheckDefinitions.forEach(function (item) {
-      item.addEventListener('change', onFilterChange);
-    });
-  };
-
-  initFilter();
 
   var checkFilter = function (item) {
     var out = true;
@@ -83,7 +72,19 @@
     return data.slice(0, MAX_VISIBLE_PINS);
   };
 
-  window.filter = {
-    filterData: filterData
+  var initFilter = function () {
+    filterSelectDefinitions.forEach(function (item) {
+      item.addEventListener('change', onFilterChange);
+    });
+    filterCheckDefinitions.forEach(function (item) {
+      item.addEventListener('change', onFilterChange);
+    });
+  };
+
+  initFilter();
+
+  return {
+    filterData: filterData,
+    mapFiltersContainer: mapFiltersContainer
   };
 })();

@@ -1,20 +1,21 @@
 'use strict';
 
-(function () {
+window.loadData = (function () {
   var COUNTER = 3;
 
+  var data = null;
   var counter = COUNTER;
 
   var onErrorLoadData = function (message) {
     var msg = '';
-    window.util.map.insertBefore(window.util.createErrorPopup('При загрузке объявлений произошла ошибка. ' + message), window.util.mapFiltersContainer);
+    window.util.map.insertBefore(window.util.createErrorPopup('При загрузке объявлений произошла ошибка. ' + message), window.filter.mapFiltersContainer);
     var error = document.querySelector('.error');
     var errorButton = error.querySelector('.error__button');
     if (counter > 0) {
       errorButton.addEventListener('mousedown', function (evt) {
         evt.preventDefault();
         error.remove();
-        window.loadData();
+        window.loadData.downloadData();
       });
     } else {
       msg = 'Попробовать в другой раз';
@@ -29,12 +30,19 @@
   };
 
   var onSuccessLoadData = function (loadedData) {
-    window.util.data = loadedData;
+    window.loadData.data = loadedData;
     window.pin.insertPins();
   };
 
-  window.loadData = function () {
+  var downloadData = function () {
     var URL = 'https://js.dump.academy/keksobooking/data';
-    window.transferData(URL, 'GET', onSuccessLoadData, onErrorLoadData);
+    if (window.loadData.data === null) {
+      window.transferData(URL, 'GET', onSuccessLoadData, onErrorLoadData);
+    }
+  };
+
+  return {
+    data: data,
+    downloadData: downloadData
   };
 })();

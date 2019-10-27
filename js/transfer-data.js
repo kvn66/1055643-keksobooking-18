@@ -1,7 +1,7 @@
 'use strict';
 
-(function () {
-  window.transferData = function (url, method, onSuccess, onError, data) {
+window.transferData = (function () {
+  return function (url, method, onSuccess, onError, data) {
     data = data || null;
 
     var xhr = new XMLHttpRequest();

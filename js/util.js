@@ -1,11 +1,10 @@
 'use strict';
 
-(function () {
+window.util = (function () {
+  var RADIX = 10;
   var ESC_KEYCODE = 27;
-  var data = null;
   var main = document.querySelector('main');
   var map = document.querySelector('.map');
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
 
   var createErrorPopup = function (message) {
     var similarErrorTemplate = document.querySelector('#error')
@@ -39,12 +38,19 @@
     };
   };
 
+  var resetPage = function () {
+    window.card.closeCard();
+    window.pin.removePins();
+    window.loadData.data = null;
+    window.mainPin.resetMainPinPosition();
+    window.form.resetForm();
+  };
 
-  window.util = {
+  return {
     ESC_KEYCODE: ESC_KEYCODE,
-    data: data,
+    RADIX: RADIX,
     map: map,
-    mapFiltersContainer: mapFiltersContainer,
+    resetPage: resetPage,
     createErrorPopup: createErrorPopup,
     createSuccessPopup: createSuccessPopup,
     debounce: debounce

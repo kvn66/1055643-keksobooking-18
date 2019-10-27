@@ -1,38 +1,9 @@
 'use strict';
 
-(function () {
-  var RADIX = 10;
-  var HEIGH_SHIFT = 15;
-
-  var mainPin = document.querySelector('.map__pin--main');
-  var mainPinStyle = getComputedStyle(mainPin);
-
-  var mainPinDefaultPosition = {
-    x: mainPinStyle.left,
-    y: mainPinStyle.top
-  };
-
-  var resetMainPinPosition = function () {
-    mainPin.style.top = mainPinDefaultPosition.y;
-    mainPin.style.left = mainPinDefaultPosition.x;
-  };
-
-  var getMainPinData = function (isInit) {
-    var shiftY = parseInt(mainPinStyle.height, RADIX) + HEIGH_SHIFT;
-    if (isInit) {
-      shiftY = Math.floor(shiftY / 2);
-    }
-    return {
-      shiftX: Math.floor(parseInt(mainPinStyle.width, RADIX) / 2),
-      shiftY: shiftY,
-      left: parseInt(mainPinStyle.left, RADIX),
-      top: parseInt(mainPinStyle.top, RADIX)
-    };
-  };
-
+window.pin = (function () {
   var searchPinIndex = function (dataArray, pin) {
-    var left = parseInt(pin.style.left, RADIX);
-    var top = parseInt(pin.style.top, RADIX);
+    var left = parseInt(pin.style.left, window.util.RADIX);
+    var top = parseInt(pin.style.top, window.util.RADIX);
     for (var i = 0; i < dataArray.length; i++) {
       if (dataArray[i].location.x === left && dataArray[i].location.y === top) {
         return i;
@@ -41,36 +12,12 @@
     return 0;
   };
 
-  var onPopupEscPress = function (evt) {
-    if (evt.which === window.util.ESC_KEYCODE) {
-      closeCard();
-    }
-  };
-
-  var closeCard = function () {
-    var card = document.querySelector('.map__card');
-    if (card !== null) {
-      card.remove();
-    }
-    document.removeEventListener('keydown', onPopupEscPress);
-  };
-
-  var openCard = function (pin) {
-    window.card.insertCard(window.util.data, searchPinIndex(window.util.data, pin));
-    var card = document.querySelector('.map__card');
-    var cardCloseButton = card.querySelector('.popup__close');
-    cardCloseButton.addEventListener('click', function () {
-      closeCard();
-    });
-    document.addEventListener('keydown', onPopupEscPress);
-  };
-
   var setEventHandlers = function () {
     var mapPinCollection = document.querySelectorAll('.map__pin');
     mapPinCollection.forEach(function (item) {
       if (!item.classList.contains('map__pin--main')) {
         item.addEventListener('click', function () {
-          openCard(item);
+          window.card.openCard(item);
         });
       }
     });
@@ -99,7 +46,7 @@
 
   var insertPins = function () {
     var pins = document.querySelector('.map__pins');
-    pins.appendChild(createPins(window.filter.filterData(window.util.data)));
+    pins.appendChild(createPins(window.filter.filterData(window.loadData.data)));
     setEventHandlers();
   };
 
@@ -112,12 +59,9 @@
     });
   };
 
-  window.pin = {
-    mainPin: mainPin,
-    getMainPinData: getMainPinData,
-    closeCard: closeCard,
+  return {
     insertPins: insertPins,
     removePins: removePins,
-    resetMainPinPosition: resetMainPinPosition
+    searchPinIndex: searchPinIndex
   };
 })();

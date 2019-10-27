@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+window.form = (function () {
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -12,34 +12,11 @@
   var formResetButton = form.querySelector('.ad-form__reset');
   var formAvatarInput = form.querySelector('#avatar');
   var formAvatarImage = form.querySelector('.ad-form-header__preview').querySelector('img');
-  var formAvatarImageDefault = form.querySelector('.ad-form-header__preview').querySelector('img').src;
+  var formAvatarImageDefault = formAvatarImage.src;
   var formImageInput = form.querySelector('#images');
   var formImages = form.querySelector('.ad-form__photo');
-
-  formAvatarInput.addEventListener('change', function () {
-    if (formAvatarInput.files[0].type.match('image.*')) {
-      var reader = new FileReader();
-      reader.addEventListener('load', function () {
-        formAvatarImage.src = reader.result;
-      });
-
-      reader.readAsDataURL(formAvatarInput.files[0]);
-    }
-  });
-
-  formImageInput.addEventListener('change', function () {
-    if (formImageInput.files[0].type.match('image.*')) {
-      var reader = new FileReader();
-      reader.addEventListener('load', function () {
-        var image = document.createElement('img');
-        image.src = reader.result;
-        image.alt = '';
-        formImages.appendChild(image);
-      });
-
-      reader.readAsDataURL(formImageInput.files[0]);
-    }
-  });
+  var formRoomNumber = form.querySelector('#room_number');
+  var formCapacity = form.querySelector('#capacity');
 
   var deleteImages = function () {
     var images = formImages.querySelectorAll('img');
@@ -96,13 +73,10 @@
     formPrice.addEventListener('invalid', onPriceInvalid);
   });
 
-  var formRoomNumber = form.querySelector('#room_number');
-  var formCapacity = form.querySelector('#capacity');
-
   var changeCapacity = function () {
     var selectedRoomNumber = getListSelected(formRoomNumber);
 
-    disableElement(formCapacity.options);
+    disableElements(formCapacity.options);
 
     switch (selectedRoomNumber) {
       case '3':
@@ -161,140 +135,113 @@
     validateCapacity();
   });
 
-  var validateTimeInOut = function (listIn, listOut) {
-    listOut.selectedIndex = listIn.selectedIndex;
-  };
-
   formTimeIn.addEventListener('change', function () {
-    validateTimeInOut(formTimeIn, formTimeOut);
+    formTimeOut.selectedIndex = formTimeIn.selectedIndex;
   });
 
   formTimeOut.addEventListener('change', function () {
-    validateTimeInOut(formTimeOut, formTimeIn);
+    formTimeIn.selectedIndex = formTimeOut.selectedIndex;
   });
 
-  var disableElement = function (element) {
-    for (var i = 0; i < element.length; i++) {
-      element[i].disabled = true;
+  var disableElements = function (elements) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].disabled = true;
     }
   };
 
-  var enableElement = function (element) {
-    for (var i = 0; i < element.length; i++) {
-      element[i].disabled = false;
+  var enableElements = function (elements) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].disabled = false;
     }
   };
 
-  var calculateAddress = function (isInit) {
-    var pin = window.pin.getMainPinData(isInit);
+  var updateAddress = function (isInit) {
+    var pin = window.mainPin.getMainPinData(isInit);
     var x = pin.left + pin.shiftX;
     var y = pin.top + pin.shiftY;
     address.value = x + ', ' + y;
   };
 
   var activateForm = function () {
-    document.querySelector('.map').classList.remove('map--faded');
+    window.util.map.classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
     document.querySelector('.map__filters').classList.remove('ad-form--disabled');
-    enableElement(formFieldsets);
-    calculateAddress(false);
-  };
-
-  var activatePage = function () {
-    if (window.util.data === null) {
-      window.loadData();
-    }
-    activateForm();
+    enableElements(formFieldsets);
+    updateAddress(false);
   };
 
   var deactivateForm = function () {
-    document.querySelector('.map').classList.add('map--faded');
+    window.util.map.classList.add('map--faded');
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
     document.querySelector('.map__filters').classList.add('ad-form--disabled');
-    disableElement(formFieldsets);
-    calculateAddress(true);
+    disableElements(formFieldsets);
+    updateAddress(true);
   };
 
   var initForm = function () {
-    disableElement(formFieldsets);
+    disableElements(formFieldsets);
     var minPrice = getMinPrice(formType).toString();
     formPrice.min = minPrice;
     formPrice.placeholder = minPrice;
     changeCapacity();
     validateCapacity();
-    calculateAddress(true);
+    updateAddress(true);
   };
 
-  initForm();
-
-  var resetPage = function () {
+  var resetForm = function () {
     document.forms[0].reset();
     document.forms[1].reset();
     deactivateForm();
-    window.pin.closeCard();
-    window.pin.removePins();
-    window.util.data = null;
-    window.pin.resetMainPinPosition();
-    calculateAddress(true);
+    updateAddress(true);
     formAvatarImage.src = formAvatarImageDefault;
     deleteImages();
   };
 
-  formResetButton.addEventListener('click', resetPage);
-
-  var closeErrorPopup = function () {
-    var error = document.querySelector('.error');
-    error.remove();
-    document.removeEventListener('click', closeErrorPopup);
-    document.removeEventListener('keydown', onErrorEscPress);
-  };
-
-  var onErrorEscPress = function (evt) {
-    if (evt.which === window.util.ESC_KEYCODE) {
-      closeErrorPopup();
-    }
-  };
-
-  var onErrorUploadData = function (message) {
-    window.util.createErrorPopup('При отправке формы произошла ошибка. ' + message);
-    var error = document.querySelector('.error');
-    var errorButton = error.querySelector('.error__button');
-    errorButton.textContent = 'Закрыть';
-    errorButton.addEventListener('click', closeErrorPopup);
-    document.addEventListener('click', closeErrorPopup);
-    document.addEventListener('keydown', onErrorEscPress);
-  };
-
-  var closeSuccessPopup = function () {
-    var success = document.querySelector('.success');
-    success.remove();
-    document.removeEventListener('click', closeSuccessPopup);
-    document.removeEventListener('keydown', onSuccessEscPress);
-
-    resetPage();
-  };
-
-  var onSuccessEscPress = function (evt) {
-    if (evt.which === window.util.ESC_KEYCODE) {
-      closeSuccessPopup();
-    }
-  };
-
-  var onSuccessUploadData = function () {
-    window.util.createSuccessPopup();
-
-    document.addEventListener('click', closeSuccessPopup);
-    document.addEventListener('keydown', onSuccessEscPress);
-  };
+  formResetButton.addEventListener('click', window.util.resetPage);
 
   form.addEventListener('submit', function (evt) {
-    window.uploadData(new FormData(form), onSuccessUploadData, onErrorUploadData);
+    window.uploadData(new FormData(form));
     evt.preventDefault();
   });
 
+  var onLoadImage = function (evt) {
+    var image = document.createElement('img');
+    image.src = evt.target.result;
+    image.alt = '';
+    formImages.appendChild(image);
+  };
 
-  window.form = {
-    activatePage: activatePage,
-    calculateAddress: calculateAddress
+  var onLoadAvatarImage = function (evt) {
+    formAvatarImage.src = evt.target.result;
+  };
+
+  var initLoadImageFromInput = function (input, onLoadFunction) {
+    input.addEventListener('change', function () {
+      if (input.files[0].type.match('image.*')) {
+        var reader = new FileReader();
+        reader.addEventListener('load', onLoadFunction);
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    });
+  };
+
+  var initLoadImage = function () {
+    initLoadImageFromInput(formImageInput, onLoadImage);
+  };
+
+  var initLoadAvatarImage = function () {
+    initLoadImageFromInput(formAvatarInput, onLoadAvatarImage);
+  };
+
+  initLoadImage();
+  initLoadAvatarImage();
+
+  initForm();
+
+  return {
+    activateForm: activateForm,
+    updateAddress: updateAddress,
+    resetForm: resetForm
   };
 })();
