@@ -4,7 +4,7 @@ window.uploadData = (function () {
   var closeErrorPopup = function () {
     var error = document.querySelector('.error');
     error.remove();
-    document.removeEventListener('click', closeErrorPopup);
+    document.removeEventListener('click', onErrorClick);
     document.removeEventListener('keydown', onErrorEscPress);
   };
 
@@ -14,20 +14,24 @@ window.uploadData = (function () {
     }
   };
 
+  var onErrorClick = function () {
+    closeErrorPopup();
+  };
+
   var onErrorUploadData = function (message) {
     window.util.createErrorPopup('При отправке формы произошла ошибка. ' + message);
     var error = document.querySelector('.error');
     var errorButton = error.querySelector('.error__button');
     errorButton.textContent = 'Закрыть';
-    errorButton.addEventListener('click', closeErrorPopup);
-    document.addEventListener('click', closeErrorPopup);
+    errorButton.addEventListener('click', onErrorClick);
+    document.addEventListener('click', onErrorClick);
     document.addEventListener('keydown', onErrorEscPress);
   };
 
   var closeSuccessPopup = function () {
     var success = document.querySelector('.success');
     success.remove();
-    document.removeEventListener('click', closeSuccessPopup);
+    document.removeEventListener('click', onSuccessClick);
     document.removeEventListener('keydown', onSuccessEscPress);
 
     window.util.resetPage();
@@ -39,10 +43,14 @@ window.uploadData = (function () {
     }
   };
 
+  var onSuccessClick = function () {
+    closeSuccessPopup();
+  };
+
   var onSuccessUploadData = function () {
     window.util.createSuccessPopup();
 
-    document.addEventListener('click', closeSuccessPopup);
+    document.addEventListener('click', onSuccessClick);
     document.addEventListener('keydown', onSuccessEscPress);
   };
 

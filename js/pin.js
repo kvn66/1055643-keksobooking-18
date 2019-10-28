@@ -17,7 +17,7 @@ window.pin = (function () {
     mapPinCollection.forEach(function (item) {
       if (!item.classList.contains('map__pin--main')) {
         item.addEventListener('click', function () {
-          window.card.openCard(item);
+          window.card.open(item);
         });
       }
     });
@@ -46,7 +46,7 @@ window.pin = (function () {
 
   var insertPins = function () {
     var pins = document.querySelector('.map__pins');
-    pins.appendChild(createPins(window.filter.filterData(window.loadData.data)));
+    pins.appendChild(createPins(window.filter.data(window.loadData.data)));
     setEventHandlers();
   };
 
@@ -60,8 +60,8 @@ window.pin = (function () {
   };
 
   return {
-    insertPins: insertPins,
-    removePins: removePins,
-    searchPinIndex: searchPinIndex
+    insert: insertPins,
+    remove: removePins,
+    searchIndex: searchPinIndex
   };
 })();

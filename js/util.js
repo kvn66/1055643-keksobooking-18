@@ -39,11 +39,11 @@ window.util = (function () {
   };
 
   var resetPage = function () {
-    window.card.closeCard();
-    window.pin.removePins();
+    window.card.close();
+    window.pin.remove();
     window.loadData.data = null;
-    window.mainPin.resetMainPinPosition();
-    window.form.resetForm();
+    window.mainPin.resetPosition();
+    window.form.reset();
   };
 
   return {

@@ -1,6 +1,11 @@
 'use strict';
 
 window.form = (function () {
+  var IMAGE_WIDTH = 70;
+  var IMAGE_HEIGHT = 70;
+
+
+  var filtersForm = document.querySelector('.map__filters');
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -14,14 +19,18 @@ window.form = (function () {
   var formAvatarImage = form.querySelector('.ad-form-header__preview').querySelector('img');
   var formAvatarImageDefault = formAvatarImage.src;
   var formImageInput = form.querySelector('#images');
-  var formImages = form.querySelector('.ad-form__photo');
+  var formImagesContainer = form.querySelector('.ad-form__photo-container');
+  var formImage = formImagesContainer.querySelector('.ad-form__photo');
   var formRoomNumber = form.querySelector('#room_number');
   var formCapacity = form.querySelector('#capacity');
 
   var deleteImages = function () {
-    var images = formImages.querySelectorAll('img');
+    var images = form.querySelectorAll('.ad-form__photo');
     images.forEach(function (item) {
-      item.remove();
+      var img = item.querySelector('img');
+      if (img !== null) {
+        item.remove();
+      }
     });
   };
 
@@ -41,16 +50,6 @@ window.form = (function () {
     return list.value;
   };
 
-  var getMinPrice = function (list) {
-    var MinPrice = {
-      FLAT: 1000,
-      BUNGALO: 0,
-      HOUSE: 5000,
-      PALACE: 10000
-    };
-    return MinPrice[getListSelected(list).toUpperCase()];
-  };
-
   var onPriceInvalid = function () {
     if (formPrice.validity.rangeUnderflow) {
       formPrice.setCustomValidity('Цена должна быть не меньше ' + formPrice.min);
@@ -65,12 +64,24 @@ window.form = (function () {
 
   formPrice.addEventListener('invalid', onPriceInvalid);
 
-  formType.addEventListener('change', function () {
+  var getMinPrice = function (list) {
+    var MinPrice = {
+      FLAT: 1000,
+      BUNGALO: 0,
+      HOUSE: 5000,
+      PALACE: 10000
+    };
+    return MinPrice[getListSelected(list).toUpperCase()];
+  };
+
+  var changeMinPrice = function () {
     var minPrice = getMinPrice(formType).toString();
     formPrice.min = minPrice;
     formPrice.placeholder = minPrice;
-    formPrice.removeEventListener('invalid', onPriceInvalid);
-    formPrice.addEventListener('invalid', onPriceInvalid);
+  };
+
+  formType.addEventListener('change', function () {
+    changeMinPrice();
   });
 
   var changeCapacity = function () {
@@ -156,7 +167,7 @@ window.form = (function () {
   };
 
   var updateAddress = function (isInit) {
-    var pin = window.mainPin.getMainPinData(isInit);
+    var pin = window.mainPin.getData(isInit);
     var x = pin.left + pin.shiftX;
     var y = pin.top + pin.shiftY;
     address.value = x + ', ' + y;
@@ -164,25 +175,26 @@ window.form = (function () {
 
   var activateForm = function () {
     window.util.map.classList.remove('map--faded');
-    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-    document.querySelector('.map__filters').classList.remove('ad-form--disabled');
+    form.classList.remove('ad-form--disabled');
+    filtersForm.classList.remove('ad-form--disabled');
     enableElements(formFieldsets);
+    changeMinPrice();
+    changeCapacity();
+    validateCapacity();
     updateAddress(false);
   };
 
   var deactivateForm = function () {
     window.util.map.classList.add('map--faded');
-    document.querySelector('.ad-form').classList.add('ad-form--disabled');
-    document.querySelector('.map__filters').classList.add('ad-form--disabled');
+    form.classList.add('ad-form--disabled');
+    filtersForm.classList.add('ad-form--disabled');
     disableElements(formFieldsets);
     updateAddress(true);
   };
 
   var initForm = function () {
     disableElements(formFieldsets);
-    var minPrice = getMinPrice(formType).toString();
-    formPrice.min = minPrice;
-    formPrice.placeholder = minPrice;
+    changeMinPrice();
     changeCapacity();
     validateCapacity();
     updateAddress(true);
@@ -197,7 +209,9 @@ window.form = (function () {
     deleteImages();
   };
 
-  formResetButton.addEventListener('click', window.util.resetPage);
+  formResetButton.addEventListener('click', function () {
+    window.util.resetPage();
+  });
 
   form.addEventListener('submit', function (evt) {
     window.uploadData(new FormData(form));
@@ -205,10 +219,15 @@ window.form = (function () {
   });
 
   var onLoadImage = function (evt) {
+    var div = document.createElement('div');
+    div.classList.add('ad-form__photo');
     var image = document.createElement('img');
     image.src = evt.target.result;
+    image.width = IMAGE_WIDTH;
+    image.height = IMAGE_HEIGHT;
     image.alt = '';
-    formImages.appendChild(image);
+    div.appendChild(image);
+    formImagesContainer.insertBefore(div, formImage);
   };
 
   var onLoadAvatarImage = function (evt) {
@@ -240,8 +259,8 @@ window.form = (function () {
   initForm();
 
   return {
-    activateForm: activateForm,
+    activate: activateForm,
     updateAddress: updateAddress,
-    resetForm: resetForm
+    reset: resetForm
   };
 })();

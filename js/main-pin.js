@@ -38,8 +38,8 @@ window.mainPin = (function () {
 
   var onMouseDown = function (evt) {
     evt.preventDefault();
-    window.loadData.downloadData();
-    window.form.activateForm();
+    window.loadData.download();
+    window.form.activate();
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
@@ -96,8 +96,8 @@ window.mainPin = (function () {
 
   var onEnterPress = function (evt) {
     if (evt.which === ENTER_KEYCODE) {
-      window.loadData.downloadData();
-      window.form.activateForm();
+      window.loadData.download();
+      window.form.activate();
     }
   };
 
@@ -107,9 +107,8 @@ window.mainPin = (function () {
   };
 
   return {
-    mainPin: mainPin,
-    getMainPinData: getMainPinData,
-    resetMainPinPosition: resetMainPinPosition,
+    getData: getMainPinData,
+    resetPosition: resetMainPinPosition,
     init: init
   };
 

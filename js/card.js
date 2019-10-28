@@ -68,7 +68,7 @@ window.card = (function () {
     if (card) {
       card.remove();
     }
-    window.util.map.insertBefore(createCard(dataArray, index), window.filter.mapFiltersContainer);
+    window.util.map.insertBefore(createCard(dataArray, index), window.filter.container);
   };
 
   var onPopupEscPress = function (evt) {
@@ -86,7 +86,7 @@ window.card = (function () {
   };
 
   var openCard = function (pin) {
-    insertCard(window.loadData.data, window.pin.searchPinIndex(window.loadData.data, pin));
+    insertCard(window.loadData.data, window.pin.searchIndex(window.loadData.data, pin));
     var card = document.querySelector('.map__card');
     var cardCloseButton = card.querySelector('.popup__close');
     cardCloseButton.addEventListener('click', function () {
@@ -96,7 +96,7 @@ window.card = (function () {
   };
 
   return {
-    openCard: openCard,
-    closeCard: closeCard
+    open: openCard,
+    close: closeCard
   };
 })();

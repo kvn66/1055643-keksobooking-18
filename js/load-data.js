@@ -8,14 +8,14 @@ window.loadData = (function () {
 
   var onErrorLoadData = function (message) {
     var msg = '';
-    window.util.map.insertBefore(window.util.createErrorPopup('При загрузке объявлений произошла ошибка. ' + message), window.filter.mapFiltersContainer);
+    window.util.map.insertBefore(window.util.createErrorPopup('При загрузке объявлений произошла ошибка. ' + message), window.filter.container);
     var error = document.querySelector('.error');
     var errorButton = error.querySelector('.error__button');
     if (counter > 0) {
       errorButton.addEventListener('mousedown', function (evt) {
         evt.preventDefault();
         error.remove();
-        window.loadData.downloadData();
+        window.loadData.download();
       });
     } else {
       msg = 'Попробовать в другой раз';
@@ -31,7 +31,7 @@ window.loadData = (function () {
 
   var onSuccessLoadData = function (loadedData) {
     window.loadData.data = loadedData;
-    window.pin.insertPins();
+    window.pin.insert();
   };
 
   var downloadData = function () {
@@ -43,6 +43,6 @@ window.loadData = (function () {
 
   return {
     data: data,
-    downloadData: downloadData
+    download: downloadData
   };
 })();

@@ -25,9 +25,9 @@ window.filter = (function () {
   ];
 
   var onFilterChange = window.util.debounce(function () {
-    window.card.closeCard();
-    window.pin.removePins();
-    window.pin.insertPins();
+    window.card.close();
+    window.pin.remove();
+    window.pin.insert();
   }, DEBOUNCE_INTERVAL);
 
   var checkFilter = function (item) {
@@ -84,7 +84,7 @@ window.filter = (function () {
   initFilter();
 
   return {
-    filterData: filterData,
-    mapFiltersContainer: mapFiltersContainer
+    data: filterData,
+    container: mapFiltersContainer
   };
 })();
