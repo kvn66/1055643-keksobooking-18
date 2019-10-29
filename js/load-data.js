@@ -32,6 +32,7 @@ window.loadData = (function () {
   var onSuccessLoadData = function (loadedData) {
     window.loadData.data = loadedData;
     window.pin.insert();
+    window.form.activateFilter();
   };
 
   var downloadData = function () {

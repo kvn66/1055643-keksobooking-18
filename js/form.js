@@ -5,7 +5,9 @@ window.form = (function () {
   var IMAGE_HEIGHT = 70;
 
 
-  var filtersForm = document.querySelector('.map__filters');
+  var filterForm = document.querySelector('.map__filters');
+  var filterFormSelects = filterForm.querySelectorAll('select');
+  var filterFormFieldsets = filterForm.querySelectorAll('fieldset');
   var form = document.querySelector('.ad-form');
   var formFieldsets = form.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -173,10 +175,21 @@ window.form = (function () {
     address.value = x + ', ' + y;
   };
 
+  var activateFilterForm = function () {
+    filterForm.classList.remove('ad-form--disabled');
+    enableElements(filterFormSelects);
+    enableElements(filterFormFieldsets);
+  };
+
+  var deactivateFilterForm = function () {
+    filterForm.classList.add('ad-form--disabled');
+    disableElements(filterFormSelects);
+    disableElements(filterFormFieldsets);
+  };
+
   var activateForm = function () {
     window.util.map.classList.remove('map--faded');
     form.classList.remove('ad-form--disabled');
-    filtersForm.classList.remove('ad-form--disabled');
     enableElements(formFieldsets);
     changeMinPrice();
     changeCapacity();
@@ -187,24 +200,23 @@ window.form = (function () {
   var deactivateForm = function () {
     window.util.map.classList.add('map--faded');
     form.classList.add('ad-form--disabled');
-    filtersForm.classList.add('ad-form--disabled');
     disableElements(formFieldsets);
     updateAddress(true);
   };
 
   var initForm = function () {
-    disableElements(formFieldsets);
+    deactivateFilterForm();
+    deactivateForm();
     changeMinPrice();
     changeCapacity();
     validateCapacity();
-    updateAddress(true);
   };
 
   var resetForm = function () {
     document.forms[0].reset();
     document.forms[1].reset();
+    deactivateFilterForm();
     deactivateForm();
-    updateAddress(true);
     formAvatarImage.src = formAvatarImageDefault;
     deleteImages();
   };
@@ -259,6 +271,7 @@ window.form = (function () {
   initForm();
 
   return {
+    activateFilter: activateFilterForm,
     activate: activateForm,
     updateAddress: updateAddress,
     reset: resetForm
